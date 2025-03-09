@@ -13,6 +13,7 @@ dependencies:
   plugin_platform_interface: ^2.0.2
   dio: ^5.4.0
   native_dio_adapter: ^1.4.0
+  inspector: ^3.0.0
 
 dev_dependencies:
   flutter_test:

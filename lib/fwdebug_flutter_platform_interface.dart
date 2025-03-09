@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'fwdebug_flutter_method_channel.dart';
@@ -19,6 +20,10 @@ abstract class FwdebugFlutterPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<bool> registerEntry(String name, VoidCallback callback) async {
+    throw UnimplementedError('registerEntry() has not been implemented.');
+  } 
 
   Future<bool> toggle({bool? visible}) async {
     throw UnimplementedError('toggle() has not been implemented.');

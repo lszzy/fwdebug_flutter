@@ -28,6 +28,9 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ),
+      builder: (context, child) {
+        return FwdebugFlutter.inspector(child: child!);
+      },
     );
   }
 
