@@ -33,7 +33,7 @@ SPEC CHECKSUMS:
   cupertino_http: 6c6bff76e2f6915cd6b22e0e6d2698309339ec46
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   FWDebug: 344424b84ad33789415bd704901b3581cd50f48d
-  fwdebug_flutter: c74c86d0062db8234cb53fbb3879dd5d8de4d788
+  fwdebug_flutter: 54a06acdff52b11f2e47422c753cdf827ef41540
   integration_test: d5929033778cc4991a187e4e1a85396fa4f59b3a
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
