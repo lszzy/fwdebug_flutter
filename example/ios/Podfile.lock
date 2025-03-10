@@ -1,0 +1,41 @@
+PODS:
+  - cupertino_http (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - FWDebug (6.0.0)
+  - fwdebug_flutter (0.0.1):
+    - Flutter
+    - FWDebug
+  - integration_test (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - cupertino_http (from `.symlinks/plugins/cupertino_http/ios`)
+  - Flutter (from `Flutter`)
+  - fwdebug_flutter (from `.symlinks/plugins/fwdebug_flutter/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+
+SPEC REPOS:
+  trunk:
+    - FWDebug
+
+EXTERNAL SOURCES:
+  cupertino_http:
+    :path: ".symlinks/plugins/cupertino_http/ios"
+  Flutter:
+    :path: Flutter
+  fwdebug_flutter:
+    :path: ".symlinks/plugins/fwdebug_flutter/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+
+SPEC CHECKSUMS:
+  cupertino_http: 6c6bff76e2f6915cd6b22e0e6d2698309339ec46
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  FWDebug: 344424b84ad33789415bd704901b3581cd50f48d
+  fwdebug_flutter: c74c86d0062db8234cb53fbb3879dd5d8de4d788
+  integration_test: d5929033778cc4991a187e4e1a85396fa4f59b3a
+
+PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+
+COCOAPODS: 1.16.2
