@@ -46,10 +46,12 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await FwdebugFlutter.systemLog('This is a system log');
+              final result =
+                  await FwdebugFlutter.systemLog('This is a system log');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(result ? 'System Log succeed' : 'System Log failed'),
+                  content:
+                      Text(result ? 'System Log succeed' : 'System Log failed'),
                   duration: const Duration(seconds: 2),
                 ),
               );
@@ -58,10 +60,12 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result = await FwdebugFlutter.customLog('This is a custom log');
+              final result =
+                  await FwdebugFlutter.customLog('This is a custom log');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(result ? 'Custom Log succeed' : 'Custom Log failed'),
+                  content:
+                      Text(result ? 'Custom Log succeed' : 'Custom Log failed'),
                   duration: const Duration(seconds: 2),
                 ),
               );
@@ -83,8 +87,38 @@ class _MyAppState extends State<MyApp> {
             },
             child: const Text('Request'),
           ),
+          ElevatedButton(
+            onPressed: () async {
+              FwdebugFlutter.registerEntry('🍺  Custom Entry', () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Custom Entry clicked'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              });
+            },
+            child: const Text('Register Entry'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              FwdebugFlutter.openUrl((url) {
+                if (url.startsWith('http://') || url.startsWith('https://')) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Open Url: ${url}'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                  return true;
+                }
+                return false;
+              });
+            },
+            child: const Text('Open Url'),
+          ),
         ],
       ),
-    ); 
+    );
   }
 }

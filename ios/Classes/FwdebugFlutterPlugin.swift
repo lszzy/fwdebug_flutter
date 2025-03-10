@@ -17,6 +17,23 @@ public class FwdebugFlutterPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
+    case "toggle":
+      if let visible = call.arguments as? Bool {
+        visible ? FWDebugManager.sharedInstance().show() : FWDebugManager.sharedInstance().hide()
+      } else {
+        FWDebugManager.sharedInstance().toggle()
+      }
+      result(nil)
+    case "systemLog":
+      if let message = call.arguments as? String, !message.isEmpty {
+        FWDebugManager.sharedInstance().systemLog(message)
+      }
+      result(nil)
+    case "customLog":
+      if let message = call.arguments as? String, !message.isEmpty {
+        FWDebugManager.sharedInstance().customLog(message)
+      }
+      result(nil)
     case "registerEntry":
       if let name = call.arguments as? String, !name.isEmpty,
          !FwdebugFlutterPlugin.registeredEntries.contains(name) {
@@ -28,27 +45,14 @@ public class FwdebugFlutterPlugin: NSObject, FlutterPlugin {
           }
         }
       }
-      result(true)
-    case "toggle":
-      if let visible = call.arguments as? Bool {
-        visible ? FWDebugManager.sharedInstance().show() : FWDebugManager.sharedInstance().hide()
-      } else {
-        FWDebugManager.sharedInstance().toggle()
-      }
-      result(true)
-    case "systemLog":
-      if let message = call.arguments as? String, !message.isEmpty {
-        FWDebugManager.sharedInstance().systemLog(message)
-        result(true)
-      } else {
-        result(false)
-      }
-    case "customLog":
-      if let message = call.arguments as? String, !message.isEmpty {
-        FWDebugManager.sharedInstance().customLog(message)
-        result(true)
-      } else {
-        result(false)
+      result(nil)
+    case "openUrl":
+      FWDebugManager.sharedInstance().openUrl = { url in
+        var success = false
+        FwdebugFlutterPlugin.methodChannel?.invokeMethod("openUrlCallback", arguments: url, result: { result in
+          success = result as? Bool ?? false
+        })
+        return success
       }
     default:
       result(FlutterMethodNotImplemented)

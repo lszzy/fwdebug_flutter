@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import 'fwdebug_flutter.dart';
 import 'fwdebug_flutter_method_channel.dart';
 
 abstract class FwdebugFlutterPlatform extends PlatformInterface {
@@ -17,23 +18,23 @@ abstract class FwdebugFlutterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
-  }
-
-  Future<bool> registerEntry(String name, VoidCallback callback) async {
-    throw UnimplementedError('registerEntry() has not been implemented.');
-  } 
-
-  Future<bool> toggle({bool? visible}) async {
+  toggle({bool? visible}) async {
     throw UnimplementedError('toggle() has not been implemented.');
   }
 
-  Future<bool> systemLog(String message) async {
+  systemLog(String message) async {
     throw UnimplementedError('systemLog() has not been implemented.');
   }
 
-  Future<bool> customLog(String message) async {
+  customLog(String message) async {
     throw UnimplementedError('customLog() has not been implemented.');
+  }
+
+  registerEntry(String name, VoidCallback callback) async {
+    throw UnimplementedError('registerEntry() has not been implemented.');
+  }
+
+  openUrl(FwdebugFlutterCallback callback) async {
+    throw UnimplementedError('openUrl() has not been implemented.');
   }
 }
