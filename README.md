@@ -2,6 +2,8 @@
 
 iOS [FWDebug](https://github.com/lszzy/FWDebug) Wrapper for Flutter.
 
+**Since this debug library calls the private APIs, the on-board review will not pass, so please remove it when submitting to AppStore.**
+
 ## Getting Started
 
 ### 1. inspector

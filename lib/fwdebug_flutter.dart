@@ -21,6 +21,7 @@ class FwdebugFlutter {
         valueListenable: _inspectorVisible,
         builder: (context, visible, child) {
           return Inspector(
+            isEnabled: true,
             isPanelVisible: visible,
             child: child!,
           );
