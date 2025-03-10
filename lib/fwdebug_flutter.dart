@@ -7,8 +7,6 @@ import 'package:native_dio_adapter/native_dio_adapter.dart';
 
 import 'fwdebug_flutter_platform_interface.dart';
 
-typedef FwdebugFlutterCallback = bool Function(String url);
-
 class FwdebugFlutter {
   static final ValueNotifier<bool> _inspectorVisible = ValueNotifier(false);
 
@@ -64,7 +62,7 @@ class FwdebugFlutter {
     }
   }
 
-  static openUrl(FwdebugFlutterCallback callback) async {
+  static openUrl(void Function(String url) callback) async {
     if (Platform.isIOS) {
       await FwdebugFlutterPlatform.instance.openUrl(callback);
     }

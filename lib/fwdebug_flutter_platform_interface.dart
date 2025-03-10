@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'fwdebug_flutter.dart';
 import 'fwdebug_flutter_method_channel.dart';
 
 abstract class FwdebugFlutterPlatform extends PlatformInterface {
@@ -34,7 +33,7 @@ abstract class FwdebugFlutterPlatform extends PlatformInterface {
     throw UnimplementedError('registerEntry() has not been implemented.');
   }
 
-  openUrl(FwdebugFlutterCallback callback) async {
+  openUrl(void Function(String url) callback) async {
     throw UnimplementedError('openUrl() has not been implemented.');
   }
 }

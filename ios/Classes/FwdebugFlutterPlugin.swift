@@ -48,12 +48,10 @@ public class FwdebugFlutterPlugin: NSObject, FlutterPlugin {
       result(nil)
     case "openUrl":
       FWDebugManager.sharedInstance().openUrl = { url in
-        var success = false
-        FwdebugFlutterPlugin.methodChannel?.invokeMethod("openUrlCallback", arguments: url, result: { result in
-          success = result as? Bool ?? false
-        })
-        return success
+        FwdebugFlutterPlugin.methodChannel?.invokeMethod("openUrlCallback", arguments: url)
+        return true
       }
+      result(nil)
     default:
       result(FlutterMethodNotImplemented)
     }

@@ -1,11 +1,10 @@
 import 'package:flutter/services.dart';
 
-import 'fwdebug_flutter.dart';
 import 'fwdebug_flutter_platform_interface.dart';
 
 class MethodChannelFwdebugFlutter extends FwdebugFlutterPlatform {
   Map<String, VoidCallback> registerEntryCallbacks = {};
-  FwdebugFlutterCallback? openUrlCallback;
+  void Function(String url)? openUrlCallback;
   final methodChannel = const MethodChannel('fwdebug_flutter');
 
   MethodChannelFwdebugFlutter() {
@@ -17,9 +16,8 @@ class MethodChannelFwdebugFlutter extends FwdebugFlutterPlatform {
           return null;
         case 'openUrlCallback':
           final url = call.arguments as String? ?? '';
-          final success =
-              openUrlCallback != null ? openUrlCallback!(url) : false;
-          return success;
+          openUrlCallback?.call(url);
+          return null;
         default:
           throw MissingPluginException();
       }
@@ -48,7 +46,7 @@ class MethodChannelFwdebugFlutter extends FwdebugFlutterPlatform {
   }
 
   @override
-  openUrl(FwdebugFlutterCallback callback) async {
+  openUrl(void Function(String url) callback) async {
     openUrlCallback = callback;
     await methodChannel.invokeMethod('openUrl');
   }

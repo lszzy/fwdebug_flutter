@@ -97,23 +97,33 @@ class _MyAppState extends State<MyApp> {
                   ),
                 );
               });
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Custom Entry registered'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             },
             child: const Text('Register Entry'),
           ),
           ElevatedButton(
             onPressed: () async {
               FwdebugFlutter.openUrl((url) {
-                if (url.startsWith('http://') || url.startsWith('https://')) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Open Url: ${url}'),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                  return true;
-                }
-                return false;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Open Url: ${url}'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
               });
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Open Url registered'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             },
             child: const Text('Open Url'),
           ),
