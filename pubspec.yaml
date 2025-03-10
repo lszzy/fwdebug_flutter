@@ -1,7 +1,7 @@
 name: fwdebug_flutter
-description: "A new Flutter plugin project."
+description: "iOS FWDebug Wrapper for Flutter."
 version: 0.0.1
-homepage:
+homepage: https://github.com/lszzy/fwdebug_flutter
 
 environment:
   sdk: '>=3.4.4 <4.0.0'

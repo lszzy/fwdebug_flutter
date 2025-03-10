@@ -46,13 +46,11 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result =
-                  await FwdebugFlutter.systemLog('This is a system log');
+              await FwdebugFlutter.systemLog('This is a system log');
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content:
-                      Text(result ? 'System Log succeed' : 'System Log failed'),
-                  duration: const Duration(seconds: 2),
+                const SnackBar(
+                  content: Text('System Log called'),
+                  duration: Duration(seconds: 2),
                 ),
               );
             },
@@ -60,13 +58,11 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final result =
-                  await FwdebugFlutter.customLog('This is a custom log');
+              await FwdebugFlutter.customLog('This is a custom log');
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content:
-                      Text(result ? 'Custom Log succeed' : 'Custom Log failed'),
-                  duration: const Duration(seconds: 2),
+                const SnackBar(
+                  content: Text('Custom Log called'),
+                  duration: Duration(seconds: 2),
                 ),
               );
             },
