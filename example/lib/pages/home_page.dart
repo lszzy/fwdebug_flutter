@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               FwdebugFlutter.toggle();
             },
-            child: const Text('Toggle Inspector'),
+            child: const Text('Toggle'),
           ),
           ElevatedButton(
             onPressed: () async {
