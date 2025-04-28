@@ -1,6 +1,8 @@
 import Flutter
 import UIKit
+#if DEBUG
 import FWDebug
+#endif
 
 public class FwdebugFlutterPlugin: NSObject, FlutterPlugin {
   private static var registeredEntries: [String] = []
@@ -18,23 +20,30 @@ public class FwdebugFlutterPlugin: NSObject, FlutterPlugin {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
     case "toggle":
+      #if DEBUG
       if let visible = call.arguments as? Bool {
         visible ? FWDebugManager.sharedInstance().show() : FWDebugManager.sharedInstance().hide()
       } else {
         FWDebugManager.sharedInstance().toggle()
       }
+      #endif
       result(nil)
     case "systemLog":
+      #if DEBUG
       if let message = call.arguments as? String, !message.isEmpty {
         FWDebugManager.sharedInstance().systemLog(message)
       }
+      #endif
       result(nil)
     case "customLog":
+      #if DEBUG
       if let message = call.arguments as? String, !message.isEmpty {
         FWDebugManager.sharedInstance().customLog(message)
       }
+      #endif
       result(nil)
     case "registerEntry":
+      #if DEBUG
       if let name = call.arguments as? String, !name.isEmpty,
          !FwdebugFlutterPlugin.registeredEntries.contains(name) {
         FwdebugFlutterPlugin.registeredEntries.append(name)
@@ -45,12 +54,15 @@ public class FwdebugFlutterPlugin: NSObject, FlutterPlugin {
           }
         }
       }
+      #endif
       result(nil)
     case "openUrl":
+      #if DEBUG
       FWDebugManager.sharedInstance().openUrl = { url in
         FwdebugFlutterPlugin.methodChannel?.invokeMethod("openUrlCallback", arguments: url)
         return true
       }
+      #endif
       result(nil)
     default:
       result(FlutterMethodNotImplemented)
