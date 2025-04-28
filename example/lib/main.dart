@@ -17,6 +17,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    FwdebugFlutter.fwdebugEnabled = false;
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
             onPressed: () {
               FwdebugFlutter.toggle();
             },
-            child: const Text('Toggle'),
+            child: const Text('Toggle Inspector'),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -81,7 +82,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               );
             },
-            child: const Text('Request'),
+            child: const Text('Dio Request'),
           ),
           ElevatedButton(
             onPressed: () async {
