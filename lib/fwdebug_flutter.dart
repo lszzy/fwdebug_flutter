@@ -12,12 +12,9 @@ import 'fwdebug_flutter_platform_interface.dart';
 
 class FwdebugFlutter {
   static bool isEnabled = true;
+  static bool fwdebugEnabled = true;
   static var talker = TalkerFlutter.init();
   static final navigatorObserver = TalkerRouteObserver(talker);
-
-  static final ValueNotifier<bool> _inspectorVisible = ValueNotifier(false);
-  static final Map<Icon, VoidCallback> _registeredEntries = {};
-  static void Function(String url)? _openUrlCallback;
 
   static Widget inspector({
     required Widget child,
@@ -28,28 +25,27 @@ class FwdebugFlutter {
       return child;
     }
 
-    if (Platform.isIOS && kDebugMode) {
+    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
       FwdebugFlutterPlatform.instance.registerEntry('👨🏾‍💻  Fwdebug Flutter',
           () {
-        _inspectorVisible.value = !_inspectorVisible.value;
+        FwdebugFlutterInspector.isVisible.value =
+            !FwdebugFlutterInspector.isVisible.value;
       });
     }
 
     return FwdebugFlutterInspector(
       onDoubleTap: onDoubleTap,
       onLongPress: onLongPress,
-      visibleNotifier: _inspectorVisible,
       child: child,
     );
   }
 
   static intercept(Dio dio) {
-    if (!isEnabled) return;
-
-    if (Platform.isIOS && kDebugMode) {
+    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
       dio.httpClientAdapter = NativeAdapter();
     }
 
+    if (!isEnabled) return;
     dio.interceptors.add(
       TalkerDioLogger(
         talker: talker,
@@ -65,27 +61,25 @@ class FwdebugFlutter {
 
   static toggle([bool? visible]) async {
     if (!isEnabled) return;
-
-    _inspectorVisible.value = visible ?? !_inspectorVisible.value;
+    FwdebugFlutterInspector.isVisible.value =
+        visible ?? !FwdebugFlutterInspector.isVisible.value;
   }
 
   static systemLog(String message) async {
-    if (!isEnabled) return;
-
-    if (Platform.isIOS && kDebugMode) {
+    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
       await FwdebugFlutterPlatform.instance.systemLog(message);
     }
 
+    if (!isEnabled) return;
     talker.info(message);
   }
 
   static customLog(String message) async {
-    if (!isEnabled) return;
-
-    if (Platform.isIOS && kDebugMode) {
+    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
       await FwdebugFlutterPlatform.instance.customLog(message);
     }
 
+    if (!isEnabled) return;
     final data = TalkerLog(
       message,
       key: 'custom',
@@ -97,17 +91,28 @@ class FwdebugFlutter {
 
   static registerEntry(Icon icon, VoidCallback callback) async {
     if (!isEnabled) return;
-
-    _registeredEntries[icon] = callback;
+    FwdebugFlutterInspector.registeredEntries[icon] = callback;
   }
 
   static openUrl(void Function(String url) callback) async {
-    if (!isEnabled) return;
-
-    if (Platform.isIOS && kDebugMode) {
+    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
       await FwdebugFlutterPlatform.instance.openUrl(callback);
     }
 
-    _openUrlCallback = callback;
+    if (!isEnabled) return;
+    FwdebugFlutterInspector.openUrlCallback = callback;
+  }
+
+  static void showTalkerScreen() {
+    if (!isEnabled) return;
+    navigatorObserver.navigator?.push(MaterialPageRoute(
+      builder: (context) => TalkerScreen(talker: FwdebugFlutter.talker),
+    ));
+  }
+
+  static toggleInspectorPanel([bool? visible]) async {
+    if (!isEnabled) return;
+    FwdebugFlutterInspector.inspectorVisible.value =
+        visible ?? !FwdebugFlutterInspector.inspectorVisible.value;
   }
 }

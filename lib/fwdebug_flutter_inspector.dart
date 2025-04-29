@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:inspector/inspector.dart';
 
+import 'fwdebug_flutter.dart';
 import 'src/draggable_floating_action_button.dart';
 
 class FwdebugFlutterInspector extends StatefulWidget {
+  static final ValueNotifier<bool> isVisible = ValueNotifier(false);
+  static final ValueNotifier<bool> inspectorVisible = ValueNotifier(false);
+  static final Map<Icon, VoidCallback> registeredEntries = {};
+  static void Function(String url)? openUrlCallback;
+
   final GestureTapCallback? onDoubleTap;
   final GestureLongPressCallback? onLongPress;
-  final ValueNotifier<bool> visibleNotifier;
   final Widget child;
 
   const FwdebugFlutterInspector({
     super.key,
     required this.onDoubleTap,
     required this.onLongPress,
-    required this.visibleNotifier,
     required this.child,
   });
 
@@ -23,19 +27,17 @@ class FwdebugFlutterInspector extends StatefulWidget {
 }
 
 class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
-  static final ValueNotifier<bool> _inspectorVisible = ValueNotifier(false);
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: widget.visibleNotifier,
-      builder: (valueContext, visible, valueChild) {
+      valueListenable: FwdebugFlutterInspector.isVisible,
+      builder: (valueContext, valueVisible, valueChild) {
         return LayoutBuilder(builder: (layoutContext, constraints) {
           final viewPadding = MediaQuery.paddingOf(context);
           return Stack(
             children: [
               ValueListenableBuilder(
-                valueListenable: _inspectorVisible,
+                valueListenable: FwdebugFlutterInspector.inspectorVisible,
                 builder: (context, visible, child) {
                   return Inspector(
                     isEnabled: true,
@@ -45,9 +47,9 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                 },
                 child: widget.child,
               ),
-              if (widget.visibleNotifier.value)
+              if (valueVisible)
                 DraggableFloatingActionButton(
-                  scaleFactor: visible ? 1 : 0,
+                  scaleFactor: valueVisible ? 1 : 0,
                   topPadding: viewPadding.top,
                   bottomPadding: viewPadding.bottom,
                   width: constraints.maxWidth,
@@ -56,9 +58,17 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                     constraints.maxWidth - 80,
                     constraints.maxHeight - viewPadding.bottom - 80,
                   ),
-                  onTap: () {},
-                  onDoubleTap: widget.onDoubleTap,
-                  onLongPress: widget.onLongPress,
+                  onTap: () {
+                    FwdebugFlutter.toggleInspectorPanel();
+                  },
+                  onDoubleTap: widget.onDoubleTap ??
+                      () {
+                        FwdebugFlutter.showTalkerScreen();
+                      },
+                  onLongPress: widget.onLongPress ??
+                      () {
+                        FwdebugFlutterInspector.isVisible.value = false;
+                      },
                   child: Container(
                     width: 60,
                     height: 60,
