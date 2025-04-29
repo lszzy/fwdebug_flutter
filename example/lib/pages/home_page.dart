@@ -71,9 +71,17 @@ class _HomePageState extends State<HomePage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              FwdebugFlutter.registerEntry(const Icon(Icons.close), () {
-                FwdebugFlutter.toggle(false);
-              });
+              if (!FwdebugFlutter.removeEntry('close')) {
+                FwdebugFlutter.registerEntry(
+                  'close',
+                  GestureDetector(
+                    onTap: () {
+                      FwdebugFlutter.toggle(false);
+                    },
+                    child: const Icon(Icons.close),
+                  ),
+                );
+              }
 
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

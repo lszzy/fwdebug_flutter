@@ -11,8 +11,8 @@ import 'fwdebug_flutter_inspector.dart';
 import 'fwdebug_flutter_platform_interface.dart';
 
 class FwdebugFlutter {
-  static bool isEnabled = true;
-  static bool fwdebugEnabled = true;
+  static var isEnabled = true;
+  static var fwdebugEnabled = true;
   static var talker = TalkerFlutter.init();
   static final navigatorObserver = TalkerRouteObserver(talker);
 
@@ -33,6 +33,21 @@ class FwdebugFlutter {
             !FwdebugFlutterInspector.isVisible.value;
       });
     }
+
+    registerEntry(
+      'talker',
+      GestureDetector(
+        onTap: () => FwdebugFlutter.showTalkerScreen(),
+        child: const Icon(Icons.speaker),
+      ),
+    );
+    registerEntry(
+      'inspector',
+      GestureDetector(
+        onTap: () => FwdebugFlutter.toggleInspectorPanel(),
+        child: const Icon(Icons.insights),
+      ),
+    );
 
     return FwdebugFlutterInspector(
       gestureEntry: gestureEntry,
@@ -61,24 +76,24 @@ class FwdebugFlutter {
     );
   }
 
-  static toggle([bool? visible]) async {
+  static toggle([bool? visible]) {
     if (!isEnabled) return;
     FwdebugFlutterInspector.isVisible.value =
         visible ?? !FwdebugFlutterInspector.isVisible.value;
   }
 
-  static systemLog(String message) async {
+  static systemLog(String message) {
     if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
-      await FwdebugFlutterPlatform.instance.systemLog(message);
+      FwdebugFlutterPlatform.instance.systemLog(message);
     }
 
     if (!isEnabled) return;
     talker.info(message);
   }
 
-  static customLog(String message) async {
+  static customLog(String message) {
     if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
-      await FwdebugFlutterPlatform.instance.customLog(message);
+      FwdebugFlutterPlatform.instance.customLog(message);
     }
 
     if (!isEnabled) return;
@@ -91,14 +106,29 @@ class FwdebugFlutter {
     talker.logCustom(data);
   }
 
-  static registerEntry(Icon icon, VoidCallback callback) async {
+  static registerEntry(String entry, Widget icon) {
     if (!isEnabled) return;
-    FwdebugFlutterInspector.registeredEntries[icon] = callback;
+    FwdebugFlutterInspector.registeredEntries
+        .removeWhere((element) => element.$1 == entry);
+    FwdebugFlutterInspector.registeredEntries.add((entry, icon));
+    FwdebugFlutterInspector.entriesCount.value =
+        FwdebugFlutterInspector.registeredEntries.length;
   }
 
-  static openUrl(void Function(String url) callback) async {
+  static bool removeEntry(String entry) {
+    if (!isEnabled) return false;
+    if (!FwdebugFlutterInspector.registeredEntries
+        .any((element) => element.$1 == entry)) return false;
+    FwdebugFlutterInspector.registeredEntries
+        .removeWhere((element) => element.$1 == entry);
+    FwdebugFlutterInspector.entriesCount.value =
+        FwdebugFlutterInspector.registeredEntries.length;
+    return true;
+  }
+
+  static openUrl(void Function(String url) callback) {
     if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
-      await FwdebugFlutterPlatform.instance.openUrl(callback);
+      FwdebugFlutterPlatform.instance.openUrl(callback);
     }
 
     if (!isEnabled) return;
@@ -112,7 +142,7 @@ class FwdebugFlutter {
     ));
   }
 
-  static toggleInspectorPanel([bool? visible]) async {
+  static toggleInspectorPanel([bool? visible]) {
     if (!isEnabled) return;
     FwdebugFlutterInspector.inspectorVisible.value =
         visible ?? !FwdebugFlutterInspector.inspectorVisible.value;
