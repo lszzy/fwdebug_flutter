@@ -71,13 +71,8 @@ class _HomePageState extends State<HomePage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              FwdebugFlutter.registerEntry('🍺  Custom Entry', () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Custom Entry clicked'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
+              FwdebugFlutter.registerEntry(const Icon(Icons.close), () {
+                FwdebugFlutter.toggle(false);
               });
 
               ScaffoldMessenger.of(context).showSnackBar(
