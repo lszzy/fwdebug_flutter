@@ -10,12 +10,14 @@ class FwdebugFlutterInspector extends StatefulWidget {
   static final Map<Icon, VoidCallback> registeredEntries = {};
   static void Function(String url)? openUrlCallback;
 
+  final bool gestureEntry;
   final GestureTapCallback? onDoubleTap;
   final GestureLongPressCallback? onLongPress;
   final Widget child;
 
   const FwdebugFlutterInspector({
     super.key,
+    required this.gestureEntry,
     required this.onDoubleTap,
     required this.onLongPress,
     required this.child,
@@ -27,6 +29,8 @@ class FwdebugFlutterInspector extends StatefulWidget {
 }
 
 class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
+  int _longPressTime = 0;
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
@@ -39,6 +43,29 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
               ValueListenableBuilder(
                 valueListenable: FwdebugFlutterInspector.inspectorVisible,
                 builder: (context, visible, child) {
+                  if (widget.gestureEntry) {
+                    return GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onLongPress: () {
+                        final longPressTime =
+                            DateTime.now().millisecondsSinceEpoch;
+                        if (_longPressTime == 0) {
+                          _longPressTime = longPressTime;
+                        } else {
+                          if (longPressTime - _longPressTime < 2000) {
+                            FwdebugFlutter.toggle();
+                          }
+                          _longPressTime = 0;
+                        }
+                      },
+                      child: Inspector(
+                        isEnabled: true,
+                        isPanelVisible: visible,
+                        child: child!,
+                      ),
+                    );
+                  }
+
                   return Inspector(
                     isEnabled: true,
                     isPanelVisible: visible,
