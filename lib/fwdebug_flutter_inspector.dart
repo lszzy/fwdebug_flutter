@@ -36,7 +36,27 @@ class FwdebugFlutterInspector extends StatefulWidget {
       _FwdebugFlutterInspectorState();
 }
 
-class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
+class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+    _animation = Tween(begin: 0.5, end: 1.0).animate(_animationController);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
@@ -122,6 +142,9 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                           child: GestureDetector(
                             onTap: () {
                               FwdebugFlutter.togglePanel();
+                              if (FwdebugFlutterInspector.panelVisible.value) {
+                                _animationController.forward(from: 0);
+                              }
                             },
                             onDoubleTap: widget.onDoubleTap ??
                                 () {
@@ -182,17 +205,20 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
       points.add(Offset(x, y));
     }
 
-    return Stack(
-      children: List.generate(size, (index) {
-        return Positioned.fromRect(
-          rect: Rect.fromCenter(
-            center: points[index],
-            width: 30,
-            height: 30,
-          ),
-          child: _buildEntry(30, entries[index]),
-        );
-      }),
+    return RotationTransition(
+      turns: _animation,
+      child: Stack(
+        children: List.generate(size, (index) {
+          return Positioned.fromRect(
+            rect: Rect.fromCenter(
+              center: points[index],
+              width: 30,
+              height: 30,
+            ),
+            child: _buildEntry(30, entries[index]),
+          );
+        }),
+      ),
     );
   }
 
