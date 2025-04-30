@@ -9,6 +9,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 import 'fwdebug_flutter_inspector.dart';
 import 'fwdebug_flutter_platform_interface.dart';
+import 'src/debug_info_screen.dart';
 
 class FwdebugFlutter {
   static var isEnabled = true;
@@ -52,6 +53,18 @@ class FwdebugFlutter {
         onTap: () {
           togglePanel(false);
           toggleInspector();
+        },
+        child: const Icon(Icons.insights),
+      ),
+    );
+    registerEntry(
+      'info',
+      GestureDetector(
+        onTap: () async {
+          togglePanel(false);
+          toggle(false);
+          await showInfoScreen();
+          toggle(true);
         },
         child: const Icon(Icons.insights),
       ),
@@ -163,6 +176,13 @@ class FwdebugFlutter {
     if (!isEnabled) return;
     await navigatorObserver.navigator?.push(MaterialPageRoute(
       builder: (context) => TalkerScreen(talker: talker),
+    ));
+  }
+
+  static Future showInfoScreen() async {
+    if (!isEnabled) return;
+    await navigatorObserver.navigator?.push(MaterialPageRoute(
+      builder: (context) => const DebugInfoScreen(),
     ));
   }
 }
