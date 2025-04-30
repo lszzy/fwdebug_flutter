@@ -9,7 +9,7 @@ import 'src/draggable_floating_action_button.dart';
 class FwdebugFlutterInspector extends StatefulWidget {
   static final isVisible = ValueNotifier(false);
   static final inspectorVisible = ValueNotifier(false);
-  static final entriesCount = ValueNotifier(0);
+  static final panelVisible = ValueNotifier(false);
   static final List<(String, Widget)> registeredEntries = [];
   static void Function(String url)? openUrlCallback;
 
@@ -45,7 +45,7 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
             children: [
               ValueListenableBuilder(
                 valueListenable: FwdebugFlutterInspector.inspectorVisible,
-                builder: (context, visible, child) {
+                builder: (inspectorContext, inspectorVisible, inspectorChild) {
                   if (widget.gestureEntry) {
                     return GestureDetector(
                       behavior: HitTestBehavior.translucent,
@@ -63,16 +63,16 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                       },
                       child: Inspector(
                         isEnabled: true,
-                        isPanelVisible: visible,
-                        child: child!,
+                        isPanelVisible: inspectorVisible,
+                        child: inspectorChild!,
                       ),
                     );
                   }
 
                   return Inspector(
                     isEnabled: true,
-                    isPanelVisible: visible,
-                    child: child!,
+                    isPanelVisible: inspectorVisible,
+                    child: inspectorChild!,
                   );
                 },
                 child: widget.child,
@@ -89,7 +89,7 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                     constraints.maxHeight - viewPadding.bottom - 150,
                   ),
                   onTap: () {
-                    FwdebugFlutter.toggleInspectorPanel();
+                    FwdebugFlutter.togglePanel();
                   },
                   onDoubleTap: widget.onDoubleTap ??
                       () {
@@ -97,11 +97,11 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                       },
                   onLongPress: widget.onLongPress ??
                       () {
-                        FwdebugFlutterInspector.isVisible.value = false;
+                        FwdebugFlutter.toggle(false);
                       },
                   child: ValueListenableBuilder(
-                    valueListenable: FwdebugFlutterInspector.entriesCount,
-                    builder: (countContext, countValue, countChild) {
+                    valueListenable: FwdebugFlutterInspector.panelVisible,
+                    builder: (panelContext, panelVisible, panelChild) {
                       return SizedBox(
                         height: 150,
                         width: 150,
@@ -109,24 +109,37 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                           children: [
                             Center(
                               child: Container(
-                                width: 60,
-                                height: 60,
-                                decoration: const ShapeDecoration(
-                                  shape: CircleBorder(),
-                                  color: Colors.white,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      spreadRadius: 0,
+                                      blurRadius: 5,
+                                      color: Colors.black.withOpacity(0.3),
+                                    )
+                                  ],
                                 ),
-                                child: const Icon(
-                                  Icons.rocket_launch_rounded,
-                                  color: Colors.blue,
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: const ShapeDecoration(
+                                    shape: CircleBorder(),
+                                    color: Colors.white,
+                                  ),
+                                  child: const Icon(
+                                    Icons.rocket_launch_rounded,
+                                    color: Colors.blue,
+                                  ),
                                 ),
                               ),
                             ),
-                            ..._buildCircle(
-                              150,
-                              FwdebugFlutterInspector.registeredEntries
-                                  .map((e) => e.$2)
-                                  .toList(),
-                            )
+                            if (panelVisible)
+                              ..._buildCircle(
+                                150,
+                                FwdebugFlutterInspector.registeredEntries
+                                    .map((e) => e.$2)
+                                    .toList(),
+                              )
                           ],
                         ),
                       );
@@ -147,23 +160,44 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
 
     final size = entries.length;
     final r = width / 2 - 20;
-    final pDegree = 2 * pi / size;
+    final degree = 2 * pi / size;
     final c = Offset(width / 2, width / 2);
     final points = [];
     for (int i = 0; i < size; i++) {
-      final d = i * pDegree;
+      final d = i * degree;
       final x = c.dx + r * cos(d);
       final y = c.dy + r * sin(d);
       points.add(Offset(x, y));
     }
+
     return List.generate(size, (index) {
       return Positioned.fromRect(
         rect: Rect.fromCenter(
           center: points[index],
-          width: 120,
-          height: 120,
+          width: 30,
+          height: 30,
         ),
-        child: entries[index],
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                spreadRadius: 0,
+                blurRadius: 5,
+                color: Colors.black.withOpacity(0.3),
+              )
+            ],
+          ),
+          child: Container(
+            width: 30,
+            height: 30,
+            decoration: const ShapeDecoration(
+              shape: CircleBorder(),
+              color: Colors.white,
+            ),
+            child: entries[index],
+          ),
+        ),
       );
     });
   }

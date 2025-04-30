@@ -68,16 +68,6 @@ class _DraggableFloatingActionButtonState
               scale: widget.scaleFactor,
               child: Container(
                 key: _key,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      spreadRadius: 0,
-                      blurRadius: 5,
-                      color: Colors.black.withOpacity(0.3),
-                    )
-                  ],
-                ),
                 child: widget.child,
               ),
             ),
@@ -86,6 +76,7 @@ class _DraggableFloatingActionButtonState
       );
 
   void _onPointerUp() {
+    if (!mounted) return;
     if (_isDragging) {
       HapticFeedback.mediumImpact();
       setState(() {
@@ -95,6 +86,7 @@ class _DraggableFloatingActionButtonState
   }
 
   void _setBoundary(_) {
+    if (!mounted) return;
     final renderBox = _key.currentContext?.findRenderObject() as RenderBox;
     final size = renderBox.size;
 
@@ -108,6 +100,7 @@ class _DraggableFloatingActionButtonState
   }
 
   void _updatePosition(PointerMoveEvent pointerMoveEvent, bool isDragging) {
+    if (!mounted) return;
     var newOffsetX = _offset.dx + pointerMoveEvent.delta.dx;
     var newOffsetY = _offset.dy + pointerMoveEvent.delta.dy;
 

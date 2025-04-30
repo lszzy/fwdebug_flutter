@@ -37,14 +37,18 @@ class FwdebugFlutter {
     registerEntry(
       'talker',
       GestureDetector(
-        onTap: () => FwdebugFlutter.showTalkerScreen(),
+        onTap: () {
+          showTalkerScreen();
+        },
         child: const Icon(Icons.speaker),
       ),
     );
     registerEntry(
       'inspector',
       GestureDetector(
-        onTap: () => FwdebugFlutter.toggleInspectorPanel(),
+        onTap: () {
+          toggleInspector();
+        },
         child: const Icon(Icons.insights),
       ),
     );
@@ -111,8 +115,6 @@ class FwdebugFlutter {
     FwdebugFlutterInspector.registeredEntries
         .removeWhere((element) => element.$1 == entry);
     FwdebugFlutterInspector.registeredEntries.add((entry, icon));
-    FwdebugFlutterInspector.entriesCount.value =
-        FwdebugFlutterInspector.registeredEntries.length;
   }
 
   static bool removeEntry(String entry) {
@@ -121,8 +123,6 @@ class FwdebugFlutter {
         .any((element) => element.$1 == entry)) return false;
     FwdebugFlutterInspector.registeredEntries
         .removeWhere((element) => element.$1 == entry);
-    FwdebugFlutterInspector.entriesCount.value =
-        FwdebugFlutterInspector.registeredEntries.length;
     return true;
   }
 
@@ -135,16 +135,22 @@ class FwdebugFlutter {
     FwdebugFlutterInspector.openUrlCallback = callback;
   }
 
-  static void showTalkerScreen() {
+  static togglePanel([bool? visible]) {
     if (!isEnabled) return;
-    navigatorObserver.navigator?.push(MaterialPageRoute(
-      builder: (context) => TalkerScreen(talker: FwdebugFlutter.talker),
-    ));
+    FwdebugFlutterInspector.panelVisible.value =
+        visible ?? !FwdebugFlutterInspector.panelVisible.value;
   }
 
-  static toggleInspectorPanel([bool? visible]) {
+  static toggleInspector([bool? visible]) {
     if (!isEnabled) return;
     FwdebugFlutterInspector.inspectorVisible.value =
         visible ?? !FwdebugFlutterInspector.inspectorVisible.value;
+  }
+
+  static void showTalkerScreen() {
+    if (!isEnabled) return;
+    navigatorObserver.navigator?.push(MaterialPageRoute(
+      builder: (context) => TalkerScreen(talker: talker),
+    ));
   }
 }
