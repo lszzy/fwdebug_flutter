@@ -18,7 +18,7 @@ class FwdebugFlutter {
 
   static Widget inspector({
     required Widget child,
-    bool gestureEntry = true,
+    Widget Function(Widget child)? detector,
     GestureTapCallback? onDoubleTap,
     GestureLongPressCallback? onLongPress,
   }) {
@@ -58,7 +58,7 @@ class FwdebugFlutter {
     );
 
     return FwdebugFlutterInspector(
-      gestureEntry: gestureEntry,
+      detector: detector,
       onDoubleTap: onDoubleTap,
       onLongPress: onLongPress,
       child: child,

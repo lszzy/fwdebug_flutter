@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:inspector/inspector.dart';
 
 import 'fwdebug_flutter.dart';
 import 'src/draggable_floating_action_button.dart';
+import 'src/multi_long_press_gesture_recognizer.dart';
 
 class FwdebugFlutterInspector extends StatefulWidget {
   static final isVisible = ValueNotifier(false);
@@ -13,14 +15,14 @@ class FwdebugFlutterInspector extends StatefulWidget {
   static final List<(String, Widget)> registeredEntries = [];
   static void Function(String url)? openUrlCallback;
 
-  final bool gestureEntry;
+  final Widget Function(Widget child)? detector;
   final GestureTapCallback? onDoubleTap;
   final GestureLongPressCallback? onLongPress;
   final Widget child;
 
   const FwdebugFlutterInspector({
     super.key,
-    required this.gestureEntry,
+    required this.detector,
     required this.onDoubleTap,
     required this.onLongPress,
     required this.child,
@@ -32,8 +34,6 @@ class FwdebugFlutterInspector extends StatefulWidget {
 }
 
 class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
-  int _longPressTime = 0;
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
@@ -46,33 +46,41 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
               ValueListenableBuilder(
                 valueListenable: FwdebugFlutterInspector.inspectorVisible,
                 builder: (inspectorContext, inspectorVisible, inspectorChild) {
-                  if (widget.gestureEntry) {
-                    return GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onLongPress: () {
-                        final longPressTime =
-                            DateTime.now().millisecondsSinceEpoch;
-                        if (_longPressTime == 0) {
-                          _longPressTime = longPressTime;
-                        } else {
-                          if (longPressTime - _longPressTime < 2000) {
-                            FwdebugFlutter.toggle();
-                          }
-                          _longPressTime = 0;
-                        }
-                      },
-                      child: Inspector(
-                        isEnabled: true,
-                        isPanelVisible: inspectorVisible,
-                        child: inspectorChild!,
-                      ),
-                    );
-                  }
-
-                  return Inspector(
+                  final inspector = Inspector(
                     isEnabled: true,
                     isPanelVisible: inspectorVisible,
                     child: inspectorChild!,
+                  );
+                  if (widget.detector != null) {
+                    return widget.detector!(inspector);
+                  }
+
+                  List<ShortcutActivator> shortcuts = const [
+                    SingleActivator(LogicalKeyboardKey.keyF, alt: true),
+                  ];
+                  return CallbackShortcuts(
+                    bindings: {
+                      for (var shortcut in shortcuts)
+                        shortcut: () => FwdebugFlutter.toggle(),
+                    },
+                    child: RawGestureDetector(
+                      gestures: {
+                        MultiLongPressGestureRecognizer:
+                            GestureRecognizerFactoryWithHandlers<
+                                MultiLongPressGestureRecognizer>(
+                          () => MultiLongPressGestureRecognizer(
+                            pointerThreshold: 2,
+                          ),
+                          (instance) {
+                            instance.onMultiLongPress = (details) {
+                              HapticFeedback.vibrate();
+                              FwdebugFlutter.toggle();
+                            };
+                          },
+                        ),
+                      },
+                      child: inspector,
+                    ),
                   );
                 },
                 child: widget.child,
