@@ -55,13 +55,22 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                     return widget.detector!(inspector);
                   }
 
-                  List<ShortcutActivator> shortcuts = const [
-                    SingleActivator(LogicalKeyboardKey.keyF, alt: true),
-                  ];
                   return CallbackShortcuts(
                     bindings: {
-                      for (var shortcut in shortcuts)
-                        shortcut: () => FwdebugFlutter.toggle(),
+                      const SingleActivator(LogicalKeyboardKey.keyF, alt: true):
+                          () => FwdebugFlutter.toggle(),
+                      const SingleActivator(LogicalKeyboardKey.keyI, alt: true):
+                          () {
+                        FwdebugFlutter.togglePanel(false);
+                        FwdebugFlutter.toggleInspector();
+                      },
+                      const SingleActivator(LogicalKeyboardKey.keyT, alt: true):
+                          () async {
+                        FwdebugFlutter.togglePanel(false);
+                        FwdebugFlutter.toggle(false);
+                        await FwdebugFlutter.showTalkerScreen();
+                        FwdebugFlutter.toggle(true);
+                      },
                     },
                     child: RawGestureDetector(
                       gestures: {
