@@ -61,7 +61,7 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
         title: const Text(
-          'Url',
+          'URL',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,

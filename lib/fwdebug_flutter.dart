@@ -29,6 +29,9 @@ class FwdebugFlutter {
     }
 
     if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
+      FwdebugFlutterPlatform.instance.openUrl((url) {
+        FwdebugFlutterInspector.openUrlCallback(url);
+      });
       FwdebugFlutterPlatform.instance.registerEntry('👨🏾‍💻  Fwdebug Flutter',
           () {
         FwdebugFlutterInspector.isVisible.value =
@@ -42,7 +45,7 @@ class FwdebugFlutter {
         onTap: () {
           showTalkerScreen();
         },
-        child: const Icon(Icons.speaker),
+        child: const Icon(Icons.bug_report, color: Colors.blue),
       ),
     );
     registerEntry(
@@ -52,7 +55,7 @@ class FwdebugFlutter {
           togglePanel(false);
           toggleInspector();
         },
-        child: const Icon(Icons.insights),
+        child: const Icon(Icons.visibility, color: Colors.blue),
       ),
     );
     registerEntry(
@@ -61,7 +64,7 @@ class FwdebugFlutter {
         onTap: () {
           showInfoScreen();
         },
-        child: const Icon(Icons.insights),
+        child: const Icon(Icons.perm_device_info, color: Colors.blue),
       ),
     );
     registerEntry(
@@ -70,7 +73,7 @@ class FwdebugFlutter {
         onTap: () {
           showUrlScreen();
         },
-        child: const Icon(Icons.open_in_browser),
+        child: const Icon(Icons.link, color: Colors.blue),
       ),
     );
 
@@ -125,28 +128,31 @@ class FwdebugFlutter {
     talker.logCustom(data);
   }
 
-  static registerEntry(String entry, Widget icon) {
-    if (!isEnabled) return;
-    FwdebugFlutterInspector.registeredEntries
-        .removeWhere((element) => element.$1 == entry);
-    FwdebugFlutterInspector.registeredEntries.add((entry, icon));
-    if (FwdebugFlutterInspector.panelVisible.value) {
-      FwdebugFlutterInspector.panelVisible.value = false;
-      FwdebugFlutterInspector.panelVisible.value = true;
-    }
-  }
-
-  static bool removeEntry(String entry) {
+  static bool registerEntry(String entry, Widget? icon) {
     if (!isEnabled) return false;
-    if (!FwdebugFlutterInspector.registeredEntries
-        .any((element) => element.$1 == entry)) return false;
+    if (icon == null) {
+      if (!FwdebugFlutterInspector.registeredEntries
+          .any((element) => element.$1 == entry)) return false;
+    }
     FwdebugFlutterInspector.registeredEntries
         .removeWhere((element) => element.$1 == entry);
+    if (icon != null) {
+      FwdebugFlutterInspector.registeredEntries.add((entry, icon));
+    }
     if (FwdebugFlutterInspector.panelVisible.value) {
       FwdebugFlutterInspector.panelVisible.value = false;
       FwdebugFlutterInspector.panelVisible.value = true;
     }
     return true;
+  }
+
+  static void registerInfo(String name, String Function()? value) {
+    if (!isEnabled) return;
+    FwdebugFlutterInspector.registeredInfos
+        .removeWhere((element) => element.$1 == name);
+    if (value != null) {
+      FwdebugFlutterInspector.registeredInfos.add((name, value));
+    }
   }
 
   static openUrl(void Function(String url) callback) {

@@ -13,7 +13,10 @@ class FwdebugFlutterInspector extends StatefulWidget {
   static final inspectorVisible = ValueNotifier(false);
   static final panelVisible = ValueNotifier(false);
   static final List<(String, Widget)> registeredEntries = [];
-  static void Function(String url)? openUrlCallback;
+  static final List<(String, String Function())> registeredInfos = [];
+  static void Function(String url) openUrlCallback = (url) {
+    FwdebugFlutter.navigatorObserver.navigator?.pushNamed(url);
+  };
 
   final Widget Function(Widget child)? detector;
   final GestureTapCallback? onDoubleTap;
@@ -67,6 +70,14 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                       const SingleActivator(LogicalKeyboardKey.keyT, alt: true):
                           () {
                         FwdebugFlutter.showTalkerScreen();
+                      },
+                      const SingleActivator(LogicalKeyboardKey.keyD, alt: true):
+                          () {
+                        FwdebugFlutter.showInfoScreen();
+                      },
+                      const SingleActivator(LogicalKeyboardKey.keyU, alt: true):
+                          () {
+                        FwdebugFlutter.showUrlScreen();
                       },
                     },
                     child: RawGestureDetector(

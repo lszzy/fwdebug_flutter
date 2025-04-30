@@ -71,14 +71,14 @@ class _HomePageState extends State<HomePage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              if (!FwdebugFlutter.removeEntry('close')) {
+              if (!FwdebugFlutter.registerEntry('close', null)) {
                 FwdebugFlutter.registerEntry(
                   'close',
                   GestureDetector(
                     onTap: () {
                       FwdebugFlutter.toggle(false);
                     },
-                    child: const Icon(Icons.close),
+                    child: const Icon(Icons.close, color: Colors.blue),
                   ),
                 );
               }
@@ -91,6 +91,20 @@ class _HomePageState extends State<HomePage> {
               );
             },
             child: const Text('Register Entry'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              FwdebugFlutter.registerInfo('Flavor',
+                  () => const String.fromEnvironment('FLUTTER_APP_FLAVOR'));
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Custom Info registered'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            },
+            child: const Text('Register Info'),
           ),
           ElevatedButton(
             onPressed: () async {
