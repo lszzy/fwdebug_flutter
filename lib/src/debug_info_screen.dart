@@ -20,12 +20,14 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
   late final TextEditingController _filterTextController;
   late List<String> _filteredInfos;
 
-  final List<Widget> entries = const [
+  final List<Widget> _entries = const [
     MediaQueryInfoEntry(),
     PackageInfoEntry(),
     DeviceInfoEntry(),
     if (!kIsWeb) PlatformInfoEntry(),
   ];
+
+  String get _filterText => _filterTextController.text.trim();
 
   @override
   void initState() {
@@ -95,7 +97,7 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
                   focusedBorder: _border,
                   enabledBorder: _border,
                   border: _border,
-                  suffixIcon: _filterTextController.text.isNotEmpty
+                  suffixIcon: _filterText.isNotEmpty
                       ? SmallIconButton(
                           icon: Icons.cancel_outlined,
                           onTap: _onSearchBarCancel,
@@ -108,9 +110,9 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
         ),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth > 1100 && entries.length > 1) {
-          var firstList = entries.sublist(0, (entries.length / 2).ceil());
-          var secondList = entries.sublist(firstList.length);
+        if (constraints.maxWidth > 1100 && _entries.length > 1) {
+          var firstList = _entries.sublist(0, (_entries.length / 2).ceil());
+          var secondList = _entries.sublist(firstList.length);
           return SingleChildScrollView(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,8 +141,8 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                for (int i = 0; i < entries.length; i++)
-                  ...buildItem(i, entries),
+                for (int i = 0; i < _entries.length; i++)
+                  ...buildItem(i, _entries),
               ],
             ),
           );
@@ -157,7 +159,7 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
       );
 
   void _filterInfos() {
-    final searchText = _filterTextController.text.toLowerCase();
+    final searchText = _filterText.toLowerCase();
     final List<String> filteredResults = [];
 
     setState(() => _filteredInfos = filteredResults);

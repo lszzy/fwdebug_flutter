@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DebugUrlScreen extends StatefulWidget {
   const DebugUrlScreen({super.key});
@@ -14,15 +15,33 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
   late List<String> _filteredUrls;
   late List<String> _selectedUrls;
 
+  List<String> _urls = [];
   var _isSelectableMode = false;
+  var _showsAddButton = false;
+
+  String get _filterText => _filterTextController.text.trim();
 
   @override
   void initState() {
     super.initState();
 
     _filterTextController = TextEditingController();
+    _filterTextController.addListener(() {
+      setState(() {
+        _showsAddButton =
+            _filterText.isNotEmpty && !_urls.contains(_filterText);
+      });
+    });
+
     _filteredUrls = [];
     _selectedUrls = [];
+    _readUrls();
+  }
+
+  @override
+  void dispose() {
+    _filterTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,6 +87,12 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
           ),
         ),
         actions: [
+          if (_showsAddButton)
+            SmallTextButton(
+              title: 'Add',
+              onTap: _onAddButtonClicked,
+            ),
+          const SizedBox(width: 8),
           SmallTextButton(
             title: _isSelectableMode ? 'Cancel' : 'Select',
             onTap: _onChangeSelectableMode,
@@ -86,7 +111,7 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
               child: TextFormField(
                 style: const TextStyle(color: Colors.white),
                 controller: _filterTextController,
-                onChanged: (_) => _filterLogs(),
+                onChanged: (_) => _filterUrls(),
                 cursorColor: Colors.white,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(
@@ -98,7 +123,7 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
                   focusedBorder: _border,
                   enabledBorder: _border,
                   border: _border,
-                  suffixIcon: _filterTextController.text.isNotEmpty
+                  suffixIcon: _filterText.isNotEmpty
                       ? SmallIconButton(
                           icon: Icons.cancel_outlined,
                           onTap: _onSearchBarCancel,
@@ -129,18 +154,35 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    _filterTextController.dispose();
-    super.dispose();
+  Future _readUrls() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _urls = prefs.getStringList('fwdebug_flutter_urls') ?? [];
+    _filterUrls();
   }
 
-  void _onSearchBarCancel() => setState(
-        () {
-          _filteredUrls = List.of([]);
-          _filterTextController.clear();
-        },
-      );
+  Future _writeUrls() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_urls.isNotEmpty) {
+      await prefs.setStringList('fwdebug_flutter_urls', _urls);
+    } else {
+      await prefs.remove('fwdebug_flutter_urls');
+    }
+  }
+
+  void _onAddButtonClicked() {
+    final url = _filterText;
+    if (url.isEmpty || _urls.contains(url)) return;
+
+    _urls.add(url);
+    _writeUrls();
+    _filterTextController.clear();
+    _filterUrls();
+  }
+
+  void _onSearchBarCancel() {
+    _filterTextController.clear();
+    _filterUrls();
+  }
 
   void _onSelectAll(bool selectedAll) => setState(
         () {
@@ -170,7 +212,7 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
   void _onDetailsTap(String log) => debugPrint(log);
 
   void _onRemoveLogs() {
-    showAdaptiveDialog(
+    showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF343434),
@@ -199,9 +241,13 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
     );
   }
 
-  void _filterLogs() {
-    final searchText = _filterTextController.text.toLowerCase();
-    final List<String> filteredResults = [];
+  void _filterUrls() {
+    final searchText = _filterText.toLowerCase();
+    final List<String> filteredResults = _urls.where(
+      (url) {
+        return url.toLowerCase().contains(searchText);
+      },
+    ).toList();
 
     setState(() => _filteredUrls = List.of(filteredResults));
   }
