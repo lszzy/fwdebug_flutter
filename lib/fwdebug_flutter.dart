@@ -37,8 +37,11 @@ class FwdebugFlutter {
     registerEntry(
       'talker',
       GestureDetector(
-        onTap: () {
-          showTalkerScreen();
+        onTap: () async {
+          togglePanel(false);
+          toggle(false);
+          await showTalkerScreen();
+          toggle(true);
         },
         child: const Icon(Icons.speaker),
       ),
@@ -47,6 +50,7 @@ class FwdebugFlutter {
       'inspector',
       GestureDetector(
         onTap: () {
+          togglePanel(false);
           toggleInspector();
         },
         child: const Icon(Icons.insights),
@@ -115,6 +119,10 @@ class FwdebugFlutter {
     FwdebugFlutterInspector.registeredEntries
         .removeWhere((element) => element.$1 == entry);
     FwdebugFlutterInspector.registeredEntries.add((entry, icon));
+    if (FwdebugFlutterInspector.panelVisible.value) {
+      FwdebugFlutterInspector.panelVisible.value = false;
+      FwdebugFlutterInspector.panelVisible.value = true;
+    }
   }
 
   static bool removeEntry(String entry) {
@@ -123,6 +131,10 @@ class FwdebugFlutter {
         .any((element) => element.$1 == entry)) return false;
     FwdebugFlutterInspector.registeredEntries
         .removeWhere((element) => element.$1 == entry);
+    if (FwdebugFlutterInspector.panelVisible.value) {
+      FwdebugFlutterInspector.panelVisible.value = false;
+      FwdebugFlutterInspector.panelVisible.value = true;
+    }
     return true;
   }
 
@@ -147,9 +159,9 @@ class FwdebugFlutter {
         visible ?? !FwdebugFlutterInspector.inspectorVisible.value;
   }
 
-  static void showTalkerScreen() {
+  static Future showTalkerScreen() async {
     if (!isEnabled) return;
-    navigatorObserver.navigator?.push(MaterialPageRoute(
+    await navigatorObserver.navigator?.push(MaterialPageRoute(
       builder: (context) => TalkerScreen(talker: talker),
     ));
   }
