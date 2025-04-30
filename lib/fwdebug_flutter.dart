@@ -45,7 +45,7 @@ class FwdebugFlutter {
         onTap: () {
           showTalkerScreen();
         },
-        child: const Icon(Icons.bug_report, color: Colors.blue),
+        child: const Icon(Icons.bug_report, color: Colors.blue, size: 20),
       ),
     );
     registerEntry(
@@ -55,7 +55,7 @@ class FwdebugFlutter {
           togglePanel(false);
           toggleInspector();
         },
-        child: const Icon(Icons.visibility, color: Colors.blue),
+        child: const Icon(Icons.visibility, color: Colors.blue, size: 20),
       ),
     );
     registerEntry(
@@ -64,7 +64,7 @@ class FwdebugFlutter {
         onTap: () {
           showInfoScreen();
         },
-        child: const Icon(Icons.perm_device_info, color: Colors.blue),
+        child: const Icon(Icons.perm_device_info, color: Colors.blue, size: 20),
       ),
     );
     registerEntry(
@@ -73,7 +73,7 @@ class FwdebugFlutter {
         onTap: () {
           showUrlScreen();
         },
-        child: const Icon(Icons.link, color: Colors.blue),
+        child: const Icon(Icons.link, color: Colors.blue, size: 20),
       ),
     );
 

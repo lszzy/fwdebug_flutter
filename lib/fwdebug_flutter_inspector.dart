@@ -110,8 +110,8 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                   width: constraints.maxWidth,
                   height: constraints.maxHeight - viewPadding.bottom,
                   initialOffset: Offset(
-                    constraints.maxWidth - 150,
-                    constraints.maxHeight - viewPadding.bottom - 150,
+                    constraints.maxWidth - 140,
+                    constraints.maxHeight - viewPadding.bottom - 140,
                   ),
                   onTap: () {
                     FwdebugFlutter.togglePanel();
@@ -128,39 +128,23 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                     valueListenable: FwdebugFlutterInspector.panelVisible,
                     builder: (panelContext, panelVisible, panelChild) {
                       return SizedBox(
-                        height: 150,
-                        width: 150,
+                        height: 130,
+                        width: 130,
                         child: Stack(
                           children: [
                             Center(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      spreadRadius: 0,
-                                      blurRadius: 5,
-                                      color: Colors.black.withOpacity(0.3),
-                                    )
-                                  ],
-                                ),
-                                child: Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: const ShapeDecoration(
-                                    shape: CircleBorder(),
-                                    color: Colors.white,
-                                  ),
-                                  child: const Icon(
-                                    Icons.rocket_launch_rounded,
-                                    color: Colors.blue,
-                                  ),
+                              child: _buildEntry(
+                                50,
+                                const Icon(
+                                  Icons.rocket_launch_rounded,
+                                  color: Colors.blue,
+                                  size: 25,
                                 ),
                               ),
                             ),
                             if (panelVisible)
-                              ..._buildCircle(
-                                150,
+                              ..._buildPanel(
+                                130,
                                 FwdebugFlutterInspector.registeredEntries
                                     .map((e) => e.$2)
                                     .toList(),
@@ -178,20 +162,20 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
     );
   }
 
-  List<Widget> _buildCircle(double width, List<Widget> entries) {
+  List<Widget> _buildPanel(double width, List<Widget> entries) {
     if (entries.isEmpty) {
       return [];
     }
 
     final size = entries.length;
-    final r = width / 2 - 20;
+    final radius = width / 2 - 15;
     final degree = 2 * pi / size;
-    final c = Offset(width / 2, width / 2);
+    final center = Offset(width / 2, width / 2);
     final points = [];
     for (int i = 0; i < size; i++) {
       final d = i * degree;
-      final x = c.dx + r * cos(d);
-      final y = c.dy + r * sin(d);
+      final x = center.dx + radius * cos(d);
+      final y = center.dy + radius * sin(d);
       points.add(Offset(x, y));
     }
 
@@ -202,28 +186,32 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
           width: 30,
           height: 30,
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                spreadRadius: 0,
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.3),
-              )
-            ],
-          ),
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: const ShapeDecoration(
-              shape: CircleBorder(),
-              color: Colors.white,
-            ),
-            child: entries[index],
-          ),
-        ),
+        child: _buildEntry(30, entries[index]),
       );
     });
+  }
+
+  Widget _buildEntry(double size, Widget child) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            spreadRadius: 0,
+            blurRadius: 5,
+            color: Colors.black.withOpacity(0.3),
+          )
+        ],
+      ),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: const ShapeDecoration(
+          shape: CircleBorder(),
+          color: Colors.white,
+        ),
+        child: child,
+      ),
+    );
   }
 }

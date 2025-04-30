@@ -78,7 +78,8 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       FwdebugFlutter.toggle(false);
                     },
-                    child: const Icon(Icons.close, color: Colors.blue),
+                    child:
+                        const Icon(Icons.close, color: Colors.blue, size: 20),
                   ),
                 );
               }
