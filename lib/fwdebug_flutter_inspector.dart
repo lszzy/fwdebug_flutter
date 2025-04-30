@@ -90,7 +90,7 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                           ),
                           (instance) {
                             instance.onMultiLongPress = (details) {
-                              HapticFeedback.vibrate();
+                              HapticFeedback.mediumImpact();
                               FwdebugFlutter.toggle();
                             };
                           },
@@ -113,46 +113,53 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                     constraints.maxWidth - 140,
                     constraints.maxHeight - viewPadding.bottom - 140,
                   ),
-                  onTap: () {
-                    FwdebugFlutter.togglePanel();
-                  },
-                  onDoubleTap: widget.onDoubleTap ??
-                      () {
-                        FwdebugFlutter.showTalkerScreen();
-                      },
-                  onLongPress: widget.onLongPress ??
-                      () {
-                        FwdebugFlutter.toggle(false);
-                      },
-                  child: ValueListenableBuilder(
-                    valueListenable: FwdebugFlutterInspector.panelVisible,
-                    builder: (panelContext, panelVisible, panelChild) {
-                      return SizedBox(
-                        height: 130,
-                        width: 130,
-                        child: Stack(
-                          children: [
-                            Center(
-                              child: _buildEntry(
-                                50,
-                                const Icon(
-                                  Icons.rocket_launch_rounded,
-                                  color: Colors.blue,
-                                  size: 25,
-                                ),
+                  child: SizedBox(
+                    height: 130,
+                    width: 130,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              FwdebugFlutter.togglePanel();
+                            },
+                            onDoubleTap: widget.onDoubleTap ??
+                                () {
+                                  FwdebugFlutter.showTalkerScreen();
+                                },
+                            onLongPress: widget.onLongPress ??
+                                () {
+                                  FwdebugFlutter.toggle(false);
+                                },
+                            child: _buildEntry(
+                              50,
+                              const Icon(
+                                Icons.rocket_launch_rounded,
+                                color: Colors.blue,
+                                size: 25,
                               ),
                             ),
-                            if (panelVisible)
-                              ..._buildPanel(
-                                130,
-                                FwdebugFlutterInspector.registeredEntries
-                                    .map((e) => e.$2)
-                                    .toList(),
-                              )
-                          ],
+                          ),
                         ),
-                      );
-                    },
+                        ValueListenableBuilder(
+                          valueListenable: FwdebugFlutterInspector.panelVisible,
+                          builder: (panelContext, panelVisible, panelChild) {
+                            if (!panelVisible ||
+                                FwdebugFlutterInspector
+                                    .registeredEntries.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+
+                            return _buildPanel(
+                              130,
+                              FwdebugFlutterInspector.registeredEntries
+                                  .map((e) => e.$2)
+                                  .toList(),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
             ],
@@ -162,11 +169,7 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
     );
   }
 
-  List<Widget> _buildPanel(double width, List<Widget> entries) {
-    if (entries.isEmpty) {
-      return [];
-    }
-
+  Widget _buildPanel(double width, List<Widget> entries) {
     final size = entries.length;
     final radius = width / 2 - 15;
     final degree = 2 * pi / size;
@@ -179,16 +182,18 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
       points.add(Offset(x, y));
     }
 
-    return List.generate(size, (index) {
-      return Positioned.fromRect(
-        rect: Rect.fromCenter(
-          center: points[index],
-          width: 30,
-          height: 30,
-        ),
-        child: _buildEntry(30, entries[index]),
-      );
-    });
+    return Stack(
+      children: List.generate(size, (index) {
+        return Positioned.fromRect(
+          rect: Rect.fromCenter(
+            center: points[index],
+            width: 30,
+            height: 30,
+          ),
+          child: _buildEntry(30, entries[index]),
+        );
+      }),
+    );
   }
 
   Widget _buildEntry(double size, Widget child) {

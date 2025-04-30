@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class DraggableFloatingActionButton extends StatefulWidget {
-  final GestureTapCallback? onTap;
-  final GestureTapCallback? onDoubleTap;
-  final GestureLongPressCallback? onLongPress;
   final double scaleFactor;
   final Offset initialOffset;
   final double topPadding;
@@ -15,9 +12,6 @@ class DraggableFloatingActionButton extends StatefulWidget {
 
   const DraggableFloatingActionButton({
     super.key,
-    required this.onTap,
-    required this.onDoubleTap,
-    required this.onLongPress,
     required this.scaleFactor,
     required this.initialOffset,
     required this.topPadding,
@@ -58,18 +52,12 @@ class _DraggableFloatingActionButtonState
           ),
           onPointerUp: (_) => _onPointerUp(),
           onPointerDown: (_) => HapticFeedback.mediumImpact(),
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: widget.onTap,
-            onDoubleTap: widget.onDoubleTap,
-            onLongPress: widget.onLongPress,
-            child: AnimatedScale(
-              duration: const Duration(milliseconds: 150),
-              scale: widget.scaleFactor,
-              child: Container(
-                key: _key,
-                child: widget.child,
-              ),
+          child: AnimatedScale(
+            duration: const Duration(milliseconds: 150),
+            scale: widget.scaleFactor,
+            child: Container(
+              key: _key,
+              child: widget.child,
             ),
           ),
         ),
