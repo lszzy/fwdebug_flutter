@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'debug_url_screen.dart';
+
 class DebugInfoScreen extends StatefulWidget {
   const DebugInfoScreen({super.key});
 
@@ -13,6 +15,11 @@ class DebugInfoScreen extends StatefulWidget {
 }
 
 class _DebugInfoScreenState extends State<DebugInfoScreen> {
+  static const _toolbarHeight = 54.0;
+
+  late final TextEditingController _filterTextController;
+  late List<String> _filteredInfos;
+
   final List<Widget> entries = const [
     MediaQueryInfoEntry(),
     PackageInfoEntry(),
@@ -21,15 +28,22 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    _filterTextController = TextEditingController();
+    _filteredInfos = [];
+  }
+
+  @override
+  void dispose() {
+    _filterTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (entries.isEmpty) {
-      return Center(
-        child: Text(
-          "No entries",
-          style: Theme.of(context).textTheme.titleLarge!,
-        ),
-      );
-    }
+    final bottomSafeArea = MediaQuery.paddingOf(context).bottom;
 
     List<Widget> buildItem(int i, List<Widget> entries) {
       return [
@@ -38,45 +52,124 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
       ];
     }
 
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 1100 && entries.length > 1) {
-        var firstList = entries.sublist(0, (entries.length / 2).ceil());
-        var secondList = entries.sublist(firstList.length);
-        return SingleChildScrollView(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    for (int i = 0; i < firstList.length; i++)
-                      ...buildItem(i, firstList),
-                  ],
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Info',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        actions: [
+          SmallTextButton(
+            title: 'Test',
+            onTap: () {},
+          ),
+          const SizedBox(width: 8),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size(double.infinity, _toolbarHeight),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            child: SizedBox(
+              height: _toolbarHeight,
+              child: TextFormField(
+                style: const TextStyle(color: Colors.white),
+                controller: _filterTextController,
+                onChanged: (_) => _filterInfos(),
+                cursorColor: Colors.white,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  hintText: 'Search',
+                  hintStyle: const TextStyle(color: Colors.white54),
+                  focusedBorder: _border,
+                  enabledBorder: _border,
+                  border: _border,
+                  suffixIcon: _filterTextController.text.isNotEmpty
+                      ? SmallIconButton(
+                          icon: Icons.cancel_outlined,
+                          onTap: _onSearchBarCancel,
+                        )
+                      : null,
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  children: [
-                    for (int i = 0; i < secondList.length; i++)
-                      ...buildItem(i, secondList),
-                  ],
+            ),
+          ),
+        ),
+      ),
+      body: LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth > 1100 && entries.length > 1) {
+          var firstList = entries.sublist(0, (entries.length / 2).ceil());
+          var secondList = entries.sublist(firstList.length);
+          return SingleChildScrollView(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < firstList.length; i++)
+                        ...buildItem(i, firstList),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      } else {
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              for (int i = 0; i < entries.length; i++) ...buildItem(i, entries),
-            ],
-          ),
-        );
-      }
-    });
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < secondList.length; i++)
+                        ...buildItem(i, secondList),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                for (int i = 0; i < entries.length; i++)
+                  ...buildItem(i, entries),
+              ],
+            ),
+          );
+        }
+      }),
+    );
   }
+
+  void _onSearchBarCancel() => setState(
+        () {
+          _filteredInfos = [];
+          _filterTextController.clear();
+        },
+      );
+
+  void _filterInfos() {
+    final searchText = _filterTextController.text.toLowerCase();
+    final List<String> filteredResults = [];
+
+    setState(() => _filteredInfos = filteredResults);
+  }
+
+  OutlineInputBorder get _border => const OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.white24,
+          width: 0,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      );
 }
 
 class MediaQueryInfoEntry extends StatelessWidget {

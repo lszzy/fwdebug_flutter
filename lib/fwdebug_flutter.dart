@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fwdebug_flutter/src/debug_url_screen.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -38,11 +39,8 @@ class FwdebugFlutter {
     registerEntry(
       'talker',
       GestureDetector(
-        onTap: () async {
-          togglePanel(false);
-          toggle(false);
-          await showTalkerScreen();
-          toggle(true);
+        onTap: () {
+          showTalkerScreen();
         },
         child: const Icon(Icons.speaker),
       ),
@@ -60,13 +58,19 @@ class FwdebugFlutter {
     registerEntry(
       'info',
       GestureDetector(
-        onTap: () async {
-          togglePanel(false);
-          toggle(false);
-          await showInfoScreen();
-          toggle(true);
+        onTap: () {
+          showInfoScreen();
         },
         child: const Icon(Icons.insights),
+      ),
+    );
+    registerEntry(
+      'url',
+      GestureDetector(
+        onTap: () {
+          showUrlScreen();
+        },
+        child: const Icon(Icons.open_in_browser),
       ),
     );
 
@@ -95,12 +99,6 @@ class FwdebugFlutter {
         ),
       ),
     );
-  }
-
-  static toggle([bool? visible]) {
-    if (!isEnabled) return;
-    FwdebugFlutterInspector.isVisible.value =
-        visible ?? !FwdebugFlutterInspector.isVisible.value;
   }
 
   static systemLog(String message) {
@@ -160,6 +158,12 @@ class FwdebugFlutter {
     FwdebugFlutterInspector.openUrlCallback = callback;
   }
 
+  static toggle([bool? visible]) {
+    if (!isEnabled) return;
+    FwdebugFlutterInspector.isVisible.value =
+        visible ?? !FwdebugFlutterInspector.isVisible.value;
+  }
+
   static togglePanel([bool? visible]) {
     if (!isEnabled) return;
     FwdebugFlutterInspector.panelVisible.value =
@@ -173,16 +177,29 @@ class FwdebugFlutter {
   }
 
   static Future showTalkerScreen() async {
-    if (!isEnabled) return;
-    await navigatorObserver.navigator?.push(MaterialPageRoute(
-      builder: (context) => TalkerScreen(talker: talker),
-    ));
+    await showScreen((context) => TalkerScreen(talker: talker));
   }
 
   static Future showInfoScreen() async {
+    await showScreen((context) => const DebugInfoScreen());
+  }
+
+  static Future showUrlScreen() async {
+    await showScreen((context) => const DebugUrlScreen());
+  }
+
+  static Future showScreen(WidgetBuilder builder) async {
     if (!isEnabled) return;
+    final isVisible = FwdebugFlutterInspector.isVisible.value;
+    if (isVisible) {
+      togglePanel(false);
+      toggle(false);
+    }
     await navigatorObserver.navigator?.push(MaterialPageRoute(
-      builder: (context) => const DebugInfoScreen(),
+      builder: builder,
     ));
+    if (isVisible) {
+      toggle(true);
+    }
   }
 }

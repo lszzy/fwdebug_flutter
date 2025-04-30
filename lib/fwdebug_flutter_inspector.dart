@@ -65,11 +65,8 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                         FwdebugFlutter.toggleInspector();
                       },
                       const SingleActivator(LogicalKeyboardKey.keyT, alt: true):
-                          () async {
-                        FwdebugFlutter.togglePanel(false);
-                        FwdebugFlutter.toggle(false);
-                        await FwdebugFlutter.showTalkerScreen();
-                        FwdebugFlutter.toggle(true);
+                          () {
+                        FwdebugFlutter.showTalkerScreen();
                       },
                     },
                     child: RawGestureDetector(
@@ -109,11 +106,8 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector> {
                     FwdebugFlutter.togglePanel();
                   },
                   onDoubleTap: widget.onDoubleTap ??
-                      () async {
-                        FwdebugFlutter.togglePanel(false);
-                        FwdebugFlutter.toggle(false);
-                        await FwdebugFlutter.showTalkerScreen();
-                        FwdebugFlutter.toggle(true);
+                      () {
+                        FwdebugFlutter.showTalkerScreen();
                       },
                   onLongPress: widget.onLongPress ??
                       () {
