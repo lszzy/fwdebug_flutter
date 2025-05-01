@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fwdebug_flutter/fwdebug_flutter_inspector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DebugUrlScreen extends StatefulWidget {
@@ -70,7 +71,7 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
               const Spacer(),
               SmallTextButton(
                 title: 'Remove',
-                onTap: _selectedUrls.isEmpty ? null : _onRemoveLogs,
+                onTap: _selectedUrls.isEmpty ? null : _onRemoveUrls,
               ),
             ],
           ),
@@ -120,9 +121,9 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
                   ),
                   hintText: 'Search',
                   hintStyle: const TextStyle(color: Colors.white54),
-                  focusedBorder: _border,
-                  enabledBorder: _border,
-                  border: _border,
+                  focusedBorder: _buildBorder(),
+                  enabledBorder: _buildBorder(),
+                  border: _buildBorder(),
                   suffixIcon: _filterText.isNotEmpty
                       ? SmallIconButton(
                           icon: Icons.cancel_outlined,
@@ -146,7 +147,7 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
             isSelectableMode: _isSelectableMode,
             onTap: _isSelectableMode
                 ? () => _onItemSelect(item)
-                : () => _onDetailsTap(item),
+                : () => _onItemClick(item),
           );
         },
         itemCount: _filteredUrls.length,
@@ -184,40 +185,42 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
     _filterUrls();
   }
 
-  void _onSelectAll(bool selectedAll) => setState(
-        () {
-          selectedAll
-              ? _selectedUrls = []
-              : _selectedUrls = List.of(_filteredUrls);
-        },
-      );
+  void _onSelectAll(bool selectedAll) {
+    setState(() {
+      _selectedUrls = selectedAll ? [] : _filteredUrls;
+    });
+  }
 
-  void _onChangeSelectableMode() => setState(
-        () {
-          _isSelectableMode = !_isSelectableMode;
-          _selectedUrls = [];
-        },
-      );
+  void _onChangeSelectableMode() {
+    setState(() {
+      _isSelectableMode = !_isSelectableMode;
+      _selectedUrls = [];
+    });
+  }
 
-  void _onItemSelect(String item) => setState(
-        () {
-          if (_selectedUrls.contains(item)) {
-            _selectedUrls.remove(item);
-          } else {
-            _selectedUrls.add(item);
-          }
-        },
-      );
+  void _onItemSelect(String item) {
+    setState(() {
+      if (_selectedUrls.contains(item)) {
+        _selectedUrls.remove(item);
+      } else {
+        _selectedUrls.add(item);
+      }
+    });
+  }
 
-  void _onDetailsTap(String log) => debugPrint(log);
+  void _onItemClick(String url) {
+    FwdebugFlutterInspector.openUrlCallback(url);
+  }
 
-  void _onRemoveLogs() {
+  void _onRemoveUrls() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF343434),
-        title: Text('Remove selected urls'),
-        content: Text('Are you sure you want to remove selected urls?'),
+        backgroundColor: const Color(0xFF212121),
+        title: const Text('Remove selected urls',
+            style: TextStyle(color: Colors.white)),
+        content: const Text('Are you sure you want to remove selected urls?',
+            style: TextStyle(color: Colors.white)),
         actions: [
           TextButton(
             onPressed: Navigator.of(context).pop,
@@ -228,12 +231,16 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
           ),
           TextButton(
             onPressed: () {
-              debugPrint('todo Clear');
+              _urls.removeWhere((url) => _selectedUrls.contains(url));
+              _writeUrls();
+              _selectedUrls.clear();
+              _isSelectableMode = false;
+              _filterUrls();
               Navigator.of(context).pop();
             },
-            child: Text(
+            child: const Text(
               'Remove',
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: Colors.red),
             ),
           ),
         ],
@@ -252,13 +259,15 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
     setState(() => _filteredUrls = List.of(filteredResults));
   }
 
-  OutlineInputBorder get _border => const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.white24,
-          width: 0,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-      );
+  OutlineInputBorder _buildBorder() {
+    return const OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.white70,
+        width: 0,
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    );
+  }
 }
 
 class DebugUrlItem extends StatelessWidget {
@@ -303,11 +312,13 @@ class DebugUrlItem extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.white70,
+                      width: 0,
                     ),
-                    color: Colors.blue,
+                    color: const Color(0xFF212121),
                   ),
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
@@ -321,23 +332,17 @@ class DebugUrlItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '$item 1',
+                                item,
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.white,
                                 ),
                               ),
+                              const Spacer(),
+                              const Icon(Icons.chevron_right,
+                                  color: Colors.white70),
                             ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '$item 2',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ),
                           ),
                         ],
                       ),
