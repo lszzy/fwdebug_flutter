@@ -97,6 +97,10 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               FwdebugFlutter.registerInfo('Flavor',
                   () => const String.fromEnvironment('FLUTTER_APP_FLAVOR'));
+              FwdebugFlutter.registerInfo('Async Info', () async {
+                await Future.delayed(const Duration(milliseconds: 10));
+                return "test";
+              });
 
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

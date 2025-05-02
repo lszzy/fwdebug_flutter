@@ -209,7 +209,12 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
   Future _setupCustomInfo() async {
     List<(String, String)> info = [];
     for (var entry in FwdebugFlutterInspector.registeredInfos) {
-      info.add((entry.$1, _format(entry.$2())));
+      final value = entry.$2();
+      if (value is Future<dynamic>) {
+        info.add((entry.$1, _format(await value)));
+      } else {
+        info.add((entry.$1, _format(value)));
+      }
     }
     _infos.add(info);
   }
