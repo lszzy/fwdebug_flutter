@@ -232,9 +232,9 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
     info.add(("Size", _format(data.size)));
     info.add(("Device Pixel Ratio", _format(data.devicePixelRatio)));
     info.add(("Physical Size", _format(data.size * data.devicePixelRatio)));
-    info.add(("Orientation", data.orientation.name));
+    info.add(("Orientation", _format(data.orientation)));
     info.add(("Text Scale Factor", _format(data.textScaler.scale(1))));
-    info.add(("Platform Brightness", data.platformBrightness.name));
+    info.add(("Platform Brightness", _format(data.platformBrightness)));
     info.add(("Padding", _format(data.padding)));
     info.add(("View Insets", _format(data.viewInsets)));
     info.add(("System Gesture Insets", _format(data.systemGestureInsets)));
@@ -247,7 +247,7 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
     info.add(("On/Off switch labels", _format(data.onOffSwitchLabels)));
     info.add(("Disable Animations", _format(data.disableAnimations)));
     info.add(("Bold Text", _format(data.boldText)));
-    info.add(("Navigation Mode", data.navigationMode.name));
+    info.add(("Navigation Mode", _format(data.navigationMode)));
     info.add(("Gesture Settings", ""));
     info.add(
         ("  Touch Slop", _format(data.gestureSettings.touchSlop ?? 'unset')));
@@ -270,6 +270,7 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
 
   String _format(dynamic value) {
     if (value is String) return '"$value"';
+    if (value is Enum) return value.name;
     return '$value';
   }
 
