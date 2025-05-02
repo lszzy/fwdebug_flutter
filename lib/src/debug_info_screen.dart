@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fwdebug_flutter/fwdebug_flutter_inspector.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'debug_url_screen.dart';
@@ -18,13 +19,15 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
   static const _toolbarHeight = 54.0;
 
   late final TextEditingController _filterTextController;
-  late List<String> _filteredInfos;
+  late List<List<(String, String)>> _filteredInfos;
+  final List<List<(String, String)>> _infos = [];
 
-  final List<Widget> _entries = const [
-    MediaQueryInfoEntry(),
-    PackageInfoEntry(),
-    DeviceInfoEntry(),
-    if (!kIsWeb) PlatformInfoEntry(),
+  final List<String> _sections = [
+    "Custom Info",
+    "Media Query",
+    "Package Info",
+    "Device Info",
+    if (!kIsWeb) "Platform Info",
   ];
 
   String get _filterText => _filterTextController.text.trim();
@@ -35,6 +38,11 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
 
     _filterTextController = TextEditingController();
     _filteredInfos = [];
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _setupInfos();
+      _filterInfos();
+    });
   }
 
   @override
@@ -45,15 +53,6 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomSafeArea = MediaQuery.paddingOf(context).bottom;
-
-    List<Widget> buildItem(int i, List<Widget> entries) {
-      return [
-        if (i > 0) const SizedBox(height: 12),
-        entries[i],
-      ];
-    }
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -68,8 +67,8 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
         ),
         actions: [
           SmallTextButton(
-            title: 'Test',
-            onTap: () {},
+            title: 'Copy',
+            onTap: () => _onCopyInfos(),
           ),
           const SizedBox(width: 8),
         ],
@@ -94,9 +93,9 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
                   ),
                   hintText: 'Search',
                   hintStyle: const TextStyle(color: Colors.white54),
-                  focusedBorder: _border,
-                  enabledBorder: _border,
-                  border: _border,
+                  focusedBorder: _buildBorder(),
+                  enabledBorder: _buildBorder(),
+                  border: _buildBorder(),
                   suffixIcon: _filterText.isNotEmpty
                       ? SmallIconButton(
                           icon: Icons.cancel_outlined,
@@ -109,69 +108,201 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
           ),
         ),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth > 1100 && _entries.length > 1) {
-          var firstList = _entries.sublist(0, (_entries.length / 2).ceil());
-          var secondList = _entries.sublist(firstList.length);
-          return SingleChildScrollView(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      for (int i = 0; i < firstList.length; i++)
-                        ...buildItem(i, firstList),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    children: [
-                      for (int i = 0; i < secondList.length; i++)
-                        ...buildItem(i, secondList),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                for (int i = 0; i < _entries.length; i++)
-                  ...buildItem(i, _entries),
-              ],
-            ),
-          );
-        }
-      }),
+      body: ListView(
+        padding: EdgeInsets.only(
+          top: 2,
+          left: 16,
+          right: 16,
+          bottom: 10 + MediaQuery.paddingOf(context).bottom,
+        ),
+        children: _buildList(),
+      ),
     );
   }
 
-  void _onSearchBarCancel() => setState(
-        () {
-          _filteredInfos = [];
-          _filterTextController.clear();
-        },
+  List<Widget> _buildList() {
+    final List<Widget> list = [];
+    for (var i = 0; i < _filteredInfos.length; i++) {
+      final info = _filteredInfos[i];
+      if (info.isEmpty) continue;
+
+      list.add(
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: const Color(0xFF212121),
+            border: Border.all(
+              color: Colors.white70,
+              width: 0,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DefaultTextStyle.merge(
+                style: Theme.of(context).textTheme.titleLarge,
+                child: Text(
+                  _sections[i],
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              ...info.map((entry) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DefaultTextStyle.merge(
+                        style: Theme.of(context).textTheme.bodySmall,
+                        child: Text(
+                          "${entry.$1}:",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: DefaultTextStyle.merge(
+                            style: Theme.of(context).textTheme.bodySmall,
+                            child: Text(
+                              entry.$2,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+        ),
       );
+    }
+
+    list.addAll(_buildEntries());
+    return list;
+  }
+
+  List<Widget> _buildEntries() {
+    final List<Widget> entries = [
+      DeviceInfoEntry(),
+      if (!kIsWeb) PlatformInfoEntry(),
+    ];
+    return entries;
+  }
+
+  Future _setupInfos() async {
+    await _setupCustomInfo();
+    await _setupMediaQuery();
+    await _setupPackageInfo();
+  }
+
+  Future _setupCustomInfo() async {
+    List<(String, String)> info = [];
+    for (var entry in FwdebugFlutterInspector.registeredInfos) {
+      info.add((entry.$1, _format(entry.$2())));
+    }
+    _infos.add(info);
+  }
+
+  Future _setupMediaQuery() async {
+    var data = MediaQuery.maybeOf(context);
+    if (data == null) {
+      data = MediaQueryData.fromView(View.of(context));
+      if (!kReleaseMode) {
+        data = data.copyWith(platformBrightness: debugBrightnessOverride);
+      }
+    }
+
+    List<(String, String)> info = [];
+    info.add(("Size", _format(data.size)));
+    info.add(("Device Pixel Ratio", _format(data.devicePixelRatio)));
+    info.add(("Physical Size", _format(data.size * data.devicePixelRatio)));
+    info.add(("Orientation", data.orientation.name));
+    info.add(("Text Scale Factor", _format(data.textScaler.scale(1))));
+    info.add(("Platform Brightness", data.platformBrightness.name));
+    info.add(("Padding", _format(data.padding)));
+    info.add(("View Insets", _format(data.viewInsets)));
+    info.add(("System Gesture Insets", _format(data.systemGestureInsets)));
+    info.add(("View Padding", _format(data.viewPadding)));
+    info.add(
+        ("Always use 24 Hour Format", _format(data.alwaysUse24HourFormat)));
+    info.add(("Accessible Navigation", _format(data.accessibleNavigation)));
+    info.add(("Invert Colors", _format(data.invertColors)));
+    info.add(("High Contrast", _format(data.highContrast)));
+    info.add(("On/Off switch labels", _format(data.onOffSwitchLabels)));
+    info.add(("Disable Animations", _format(data.disableAnimations)));
+    info.add(("Bold Text", _format(data.boldText)));
+    info.add(("Navigation Mode", data.navigationMode.name));
+    info.add(("Gesture Settings", ""));
+    info.add(
+        ("  Touch Slop", _format(data.gestureSettings.touchSlop ?? 'unset')));
+    info.add(("  Pan Slop", _format(data.gestureSettings.panSlop ?? 'unset')));
+    _infos.add(info);
+  }
+
+  Future _setupPackageInfo() async {
+    final data = await PackageInfo.fromPlatform();
+
+    List<(String, String)> info = [];
+    info.add(("App Name", _format(data.appName)));
+    info.add(("Package Name", _format(data.packageName)));
+    info.add(("Version", _format(data.version)));
+    info.add(("Build Number", _format(data.buildNumber)));
+    info.add(("Build Signature", _format(data.buildSignature)));
+    info.add(("Installer Store", _format(data.installerStore ?? 'unknown')));
+    _infos.add(info);
+  }
+
+  String _format(dynamic value) {
+    if (value is String) return '"$value"';
+    return '$value';
+  }
+
+  void _onSearchBarCancel() {
+    setState(() {
+      _filterTextController.clear();
+      _filterInfos();
+    });
+  }
+
+  void _onCopyInfos() {}
 
   void _filterInfos() {
     final searchText = _filterText.toLowerCase();
-    final List<String> filteredResults = [];
+    List<List<(String, String)>> filteredResults = [];
+    for (var info in _infos) {
+      final List<(String, String)> filteredInfo = [];
+      for (var entry in info) {
+        if (entry.$1.toLowerCase().contains(searchText) ||
+            entry.$2.toLowerCase().contains(searchText)) {
+          filteredInfo.add(entry);
+        }
+      }
+      filteredResults.add(filteredInfo);
+    }
 
     setState(() => _filteredInfos = filteredResults);
   }
 
-  OutlineInputBorder get _border => const OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.white24,
-          width: 0,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-      );
+  OutlineInputBorder _buildBorder() {
+    return const OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Colors.white70,
+        width: 0,
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    );
+  }
 }
 
 class MediaQueryInfoEntry extends StatelessWidget {

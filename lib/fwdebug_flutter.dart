@@ -146,7 +146,7 @@ class FwdebugFlutter {
     return true;
   }
 
-  static void registerInfo(String name, String Function()? value) {
+  static void registerInfo(String name, dynamic Function()? value) {
     if (!isEnabled) return;
     FwdebugFlutterInspector.registeredInfos
         .removeWhere((element) => element.$1 == name);
