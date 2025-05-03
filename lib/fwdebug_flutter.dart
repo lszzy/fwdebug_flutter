@@ -16,7 +16,7 @@ class FwdebugFlutter {
   static var isEnabled = true;
   static var fwdebugEnabled = true;
   static var talker = TalkerFlutter.init();
-  static final navigatorObserver = TalkerRouteObserver(talker);
+  static var navigatorObserver = TalkerRouteObserver(talker);
 
   static Widget inspector({
     required Widget child,

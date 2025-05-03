@@ -1,13 +1,11 @@
 # fwdebug_flutter
 
-iOS [FWDebug](https://github.com/lszzy/FWDebug) Wrapper for Flutter.
-
-**Since this debug library calls the private APIs, the on-board review will not pass, so please remove it when submitting to AppStore.**
+Flutter debugging libraray, wrapper for [talker_flutter](https://pub.dev/packages/talker_flutter), [inspector](https://pub.dev/packages/inspector), iOS [FWDebug](https://github.com/lszzy/FWDebug) and so on.
 
 ## Getting Started
 
 ### 1. inspector
-Initialize the Inspector debugging widget, for example:
+Initialize the fwdebug_flutter inspector, for example:
 
     Widget build(BuildContext context) {
       return MaterialApp(
@@ -18,33 +16,54 @@ Initialize the Inspector debugging widget, for example:
       );
     }
 
-### 2. intercept
-Forward Dio requests to iOS native FWDebug, for example:
+### 2. navigatorObserver
+Register the fwdebug_flutter navigatorObserver, for example:
+
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        ...
+        navigatorObservers: [FwdebugFlutter.navigatorObserver],
+      );
+    }
+
+### 3. intercept
+Forward Dio requests to fwdebug_flutter, for example:
 
     final dio = Dio();
     FwdebugFlutter.intercept(dio);
 
-### 3. systemLog
-Record logs to iOS native FWDebug, for example:
+### 4. systemLog
+Record logs to fwdebug_flutter, for example:
 
     FwdebugFlutter.systemLog('This is a system log');
 
-### 4. customLog
-Record file logs to iOS native FWDebug, for example:
+### 5. customLog
+Record custom logs to fwdebug_flutter, for example:
 
     FwdebugFlutter.customLog('This is a custom log');
 
-### 5. toggle
-Toggle iOS native FWDebug to show or hide, for example:
+### 6. toggle
+Toggle fwdebug_flutter to show or hide, for example:
 
     FwdebugFlutter.toggle();
 
-### 6. registerEntry
-Register custom entry to iOS native FWDebug, for example:
+### 7. registerEntry
+Register custom entry to fwdebug_flutter, for example:
 
-    FwdebugFlutter.registerEntry('🍺  Custom Entry', () { ... });
+    FwdebugFlutter.registerEntry(
+        'entry',
+        GestureDetector(
+            onTap: () { ... }, 
+            child: Icon(icon, color: Colors.blue, size: 20),
+        ),
+    );
 
-### 6. openUrl
-Register opening URL of iOS native FWDebug, for example:
+### 8. registerInfo
+Register custom info to fwdebug_flutter, for example:
+
+    FwdebugFlutter.registerInfo('custom', () { ... });
+
+### 9. openUrl
+Register opening URL of fwdebug_flutter, for example:
 
     FwdebugFlutter.openUrl((url) { ... });
