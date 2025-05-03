@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fwdebug_flutter/fwdebug_flutter_inspector.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -141,44 +142,54 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DefaultTextStyle.merge(
-                style: Theme.of(context).textTheme.titleLarge,
-                child: Text(
-                  _sections[i],
-                  style: const TextStyle(color: Colors.white),
+              GestureDetector(
+                onTap: () {
+                  _onCopyText(_sections[i]);
+                },
+                child: DefaultTextStyle.merge(
+                  style: Theme.of(context).textTheme.titleLarge,
+                  child: Text(
+                    _sections[i],
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
               ...info.map((entry) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DefaultTextStyle.merge(
-                        style: Theme.of(context).textTheme.bodySmall,
-                        child: Text(
-                          "${entry.$1}:",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                  child: GestureDetector(
+                    onTap: () {
+                      _onCopyText("${entry.$1}: ${entry.$2}");
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DefaultTextStyle.merge(
+                          style: Theme.of(context).textTheme.bodySmall,
+                          child: Text(
+                            "${entry.$1}:",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: DefaultTextStyle.merge(
-                            style: Theme.of(context).textTheme.bodySmall,
-                            child: Text(
-                              entry.$2,
-                              style: const TextStyle(
-                                color: Colors.white,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 4),
+                            child: DefaultTextStyle.merge(
+                              style: Theme.of(context).textTheme.bodySmall,
+                              child: Text(
+                                entry.$2,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               }),
@@ -447,7 +458,26 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
     });
   }
 
-  void _onCopyInfos() {}
+  void _onCopyText(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Copied'), duration: Duration(seconds: 1)),
+    );
+  }
+
+  void _onCopyInfos() {
+    var text = "";
+    for (var i = 0; i < _filteredInfos.length; i++) {
+      final info = _filteredInfos[i];
+      if (info.isEmpty) continue;
+
+      text += "\n${_sections[i]}\n";
+      for (var entry in info) {
+        text += "${entry.$1}: ${entry.$2}\n";
+      }
+    }
+    _onCopyText(text.trim());
+  }
 
   void _filterInfos() {
     final searchText = _filterText.toLowerCase();
