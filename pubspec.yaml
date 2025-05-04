@@ -1,6 +1,6 @@
 name: fwdebug_flutter
-description: "iOS FWDebug Wrapper for Flutter."
-version: 0.0.2
+description: "Flutter debugging library."
+version: 1.0.0
 homepage: https://github.com/lszzy/fwdebug_flutter
 
 environment:

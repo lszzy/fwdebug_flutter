@@ -1,6 +1,9 @@
 # fwdebug_flutter
 
-Flutter debugging libraray, wrapper for [talker_flutter](https://pub.dev/packages/talker_flutter), [inspector](https://pub.dev/packages/inspector), iOS [FWDebug](https://github.com/lszzy/FWDebug) and so on.
+Flutter debugging libraray, wrapper for [talker_flutter](https://pub.dev/packages/talker_flutter), [inspector](https://pub.dev/packages/inspector), [FWDebug](https://github.com/lszzy/FWDebug) and so on, to facilitate development and testing.
+
+## Screenshot
+![Screenshot](fwdebug_flutter.gif)
 
 ## Getting Started
 
