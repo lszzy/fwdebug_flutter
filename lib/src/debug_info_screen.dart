@@ -448,6 +448,10 @@ class _DebugInfoScreenState extends State<DebugInfoScreen> {
   String _format(dynamic value) {
     if (value is String) return '"$value"';
     if (value is Enum) return value.name;
+    if (value is Size) return "Size(${value.width}, ${value.height})";
+    if (value is EdgeInsets) {
+      return "EdgeInsets(${value.left}, ${value.top}, ${value.right}, ${value.bottom})";
+    }
     return '$value';
   }
 
