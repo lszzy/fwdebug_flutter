@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'fwdebug_flutter'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'iOS FWDebug Wrapper for Flutter.'
   s.description      = <<-DESC
 iOS FWDebug Wrapper for Flutter.

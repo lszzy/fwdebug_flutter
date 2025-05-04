@@ -34,6 +34,7 @@ Forward Dio requests to fwdebug_flutter, for example:
 
     final dio = Dio();
     FwdebugFlutter.intercept(dio);
+    // dio.interceptors.add(FwdebugFlutter.interceptor);
 
 ### 4. systemLog
 Record logs to fwdebug_flutter, for example:

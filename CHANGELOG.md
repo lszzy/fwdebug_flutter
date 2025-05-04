@@ -1,13 +1,17 @@
+## 1.0.1
+
+* Add FwdebugFlutter.interceptor for dio.
+
 ## 1.0.0
 
-* 1.0.0 official version released
+* 1.0.0 official version released.
 * Added talker_flutter debugging tool, supports dio, log, route, etc.
-* Added App information debugging tool, supports custom information
-* Added route debugging tool, can quickly open the specified route
-* Added Inspector debugging tool, quick debugging UI
-* Added floating draggable button, supports custom entry
-* Supports Release mode, supports custom gestures
-* Only Debug mode enables iOS FWDebug plugin
+* Added App information debugging tool, supports custom information.
+* Added route debugging tool, can quickly open the specified route.
+* Added Inspector debugging tool, quick debugging UI.
+* Added floating draggable button, supports custom entry.
+* Supports Release mode, supports custom gestures.
+* Only Debug mode enables iOS FWDebug plugin.
 
 ## 0.0.2
 
