@@ -91,15 +91,17 @@ class FwdebugFlutter {
     }
 
     if (!isEnabled) return;
-    dio.interceptors.add(
-      TalkerDioLogger(
-        talker: talker,
-        settings: const TalkerDioLoggerSettings(
-          printRequestHeaders: true,
-          printResponseHeaders: true,
-          printResponseMessage: true,
-          printResponseTime: true,
-        ),
+    dio.interceptors.add(interceptor);
+  }
+
+  static Interceptor get interceptor {
+    return TalkerDioLogger(
+      talker: talker,
+      settings: const TalkerDioLoggerSettings(
+        printRequestHeaders: true,
+        printResponseHeaders: true,
+        printResponseMessage: true,
+        printResponseTime: true,
       ),
     );
   }
