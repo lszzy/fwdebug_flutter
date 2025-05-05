@@ -1,3 +1,7 @@
+## 1.0.2
+
+* Keep the inspector position and do not reset it.
+
 ## 1.0.1
 
 * Add FwdebugFlutter.interceptor for dio.

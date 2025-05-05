@@ -27,8 +27,8 @@ class DraggableFloatingActionButton extends StatefulWidget {
 
 class _DraggableFloatingActionButtonState
     extends State<DraggableFloatingActionButton> {
+  static Offset? _lastOffset;
   final _key = GlobalKey();
-  late Offset _offset;
   var _isDragging = false;
   var _minOffset = Offset.zero;
   var _maxOffset = Offset.zero;
@@ -37,14 +37,14 @@ class _DraggableFloatingActionButtonState
   void initState() {
     super.initState();
 
-    _offset = widget.initialOffset;
+    _lastOffset ??= widget.initialOffset;
     WidgetsBinding.instance.addPostFrameCallback(_setBoundary);
   }
 
   @override
   Widget build(BuildContext context) => Positioned(
-        left: _offset.dx,
-        top: _offset.dy,
+        left: _lastOffset?.dx ?? 0,
+        top: _lastOffset?.dy ?? 0,
         child: Listener(
           onPointerMove: (pointerMoveEvent) => _updatePosition(
             pointerMoveEvent,
@@ -89,8 +89,8 @@ class _DraggableFloatingActionButtonState
 
   void _updatePosition(PointerMoveEvent pointerMoveEvent, bool isDragging) {
     if (!mounted) return;
-    var newOffsetX = _offset.dx + pointerMoveEvent.delta.dx;
-    var newOffsetY = _offset.dy + pointerMoveEvent.delta.dy;
+    var newOffsetX = (_lastOffset?.dx ?? 0) + pointerMoveEvent.delta.dx;
+    var newOffsetY = (_lastOffset?.dy ?? 0) + pointerMoveEvent.delta.dy;
 
     if (newOffsetX < _minOffset.dx) {
       newOffsetX = _minOffset.dx;
@@ -105,10 +105,10 @@ class _DraggableFloatingActionButtonState
     }
 
     final newOffset = Offset(newOffsetX, newOffsetY);
-    if (newOffset == _offset) return;
+    if (newOffset == _lastOffset) return;
 
     setState(() {
-      _offset = Offset(newOffsetX, newOffsetY);
+      _lastOffset = Offset(newOffsetX, newOffsetY);
       _isDragging = isDragging;
     });
   }
