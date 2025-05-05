@@ -49,13 +49,12 @@ class FwdebugFlutter {
       ),
     );
     registerEntry(
-      'inspector',
+      'url',
       GestureDetector(
         onTap: () {
-          togglePanel(false);
-          toggleInspector();
+          showUrlScreen();
         },
-        child: const Icon(Icons.visibility, color: Colors.blue, size: 20),
+        child: const Icon(Icons.link, color: Colors.blue, size: 20),
       ),
     );
     registerEntry(
@@ -68,12 +67,13 @@ class FwdebugFlutter {
       ),
     );
     registerEntry(
-      'url',
+      'inspector',
       GestureDetector(
         onTap: () {
-          showUrlScreen();
+          togglePanel(false);
+          toggleInspector();
         },
-        child: const Icon(Icons.link, color: Colors.blue, size: 20),
+        child: const Icon(Icons.visibility, color: Colors.blue, size: 20),
       ),
     );
 
