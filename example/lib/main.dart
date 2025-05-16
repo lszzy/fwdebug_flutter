@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fwdebug_flutter/fwdebug_flutter.dart';
 
 void main() {
+  // FwdebugFlutter.isEnabled = kDebugMode;
   runApp(const MyApp());
 }
 
@@ -141,7 +143,7 @@ class _HomePageState extends State<HomePage> {
               FwdebugFlutter.openUrl((url) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Open Url: ${url}'),
+                    content: Text('Open Url: $url'),
                     duration: const Duration(seconds: 2),
                   ),
                 );

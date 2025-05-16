@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Toggle iOS FWDebug when double clicking the inspector if supported.
+
 ## 1.0.2
 
 * Keep the inspector position and do not reset it.
