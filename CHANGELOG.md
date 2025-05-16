@@ -1,6 +1,7 @@
 ## 1.0.3
 
 * Toggle iOS FWDebug when double clicking the inspector if supported.
+* Added registerUrl method to register url with optional callback.
 
 ## 1.0.2
 

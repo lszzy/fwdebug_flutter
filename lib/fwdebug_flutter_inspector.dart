@@ -17,6 +17,7 @@ class FwdebugFlutterInspector extends StatefulWidget {
   static final panelVisible = ValueNotifier(false);
   static final List<(String, Widget)> registeredEntries = [];
   static final List<(String, dynamic Function())> registeredInfos = [];
+  static final List<(String, void Function(String url)?)> registeredUrls = [];
   static void Function(String url) openUrlCallback = (url) {
     FwdebugFlutter.navigatorObserver.navigator?.pushNamed(url);
   };

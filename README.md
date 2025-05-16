@@ -70,7 +70,13 @@ Register custom info to fwdebug_flutter, for example:
 
     FwdebugFlutter.registerInfo('custom', () { ... });
 
-### 9. openUrl
+### 9. registerUrl
+Register custom url to fwdebug_flutter, for example:
+
+    FwdebugFlutter.registerUrl('/custom');
+    // FwdebugFlutter.registerUrl('/custom', (url) { ... });
+
+### 10. openUrl
 Register opening URL of fwdebug_flutter, for example:
 
     FwdebugFlutter.openUrl((url) { ... });
