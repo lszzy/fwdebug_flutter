@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fwdebug_flutter/fwdebug_flutter.dart';
 
 void main() {
+  // FwdebugFlutter.isEnabled = kDebugMode;
   runApp(const MyApp());
 }
 
@@ -57,24 +58,14 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () async {
               await FwdebugFlutter.systemLog('This is a system log');
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('System Log called'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              _showToast('System Log called');
             },
             child: const Text('System Log'),
           ),
           ElevatedButton(
             onPressed: () async {
               await FwdebugFlutter.customLog('This is a custom log');
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Custom Log called'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              _showToast('Custom Log called');
             },
             child: const Text('Custom Log'),
           ),
@@ -85,12 +76,7 @@ class _HomePageState extends State<HomePage> {
               // dio.interceptors.add(FwdebugFlutter.interceptor);
 
               final response = await dio.get('http://www.wuyong.site/time.php');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(response.data?.toString() ?? 'Request failed'),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
+              _showToast(response.data?.toString() ?? 'Request failed');
             },
             child: const Text('Dio Request'),
           ),
@@ -109,12 +95,7 @@ class _HomePageState extends State<HomePage> {
                 );
               }
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Custom Entry registered'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              _showToast('Custom Entry registered');
             },
             child: const Text('Register Entry'),
           ),
@@ -127,36 +108,41 @@ class _HomePageState extends State<HomePage> {
                 return "test";
               });
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Custom Info registered'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              _showToast('Custom Info registered');
             },
             child: const Text('Register Info'),
           ),
           ElevatedButton(
             onPressed: () async {
-              FwdebugFlutter.openUrl((url) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Open Url: ${url}'),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
+              FwdebugFlutter.registerUrl('/');
+              FwdebugFlutter.registerUrl('/custom', (url) {
+                _showToast('Open Custom Url: $url');
               });
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Open Url registered'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              _showToast('Custom Url registered');
+            },
+            child: const Text('Register Url'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              FwdebugFlutter.openUrl((url) {
+                _showToast('Open Url: $url');
+              });
+
+              _showToast('Open Url registered');
             },
             child: const Text('Open Url'),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showToast(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

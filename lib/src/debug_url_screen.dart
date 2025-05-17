@@ -158,6 +158,9 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
   Future _readUrls() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     _urls = prefs.getStringList('fwdebug_flutter_urls') ?? [];
+    if (_urls.isEmpty) {
+      _urls = FwdebugFlutterInspector.registeredUrls.map((e) => e.$1).toList();
+    }
     _filterUrls();
   }
 
@@ -208,8 +211,17 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
     });
   }
 
-  void _onItemClick(String url) {
-    FwdebugFlutterInspector.openUrlCallback(url);
+  void _onItemClick(String url) async {
+    final index = FwdebugFlutterInspector.registeredUrls
+        .indexWhere((element) => element.$1 == url);
+    final callback =
+        index >= 0 ? FwdebugFlutterInspector.registeredUrls[index].$2 : null;
+    await Navigator.maybePop(context);
+    if (callback != null) {
+      callback.call(url);
+    } else {
+      FwdebugFlutterInspector.openUrlCallback(url);
+    }
   }
 
   void _onRemoveUrls() {

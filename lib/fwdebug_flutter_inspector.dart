@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspector/inspector.dart';
 
 import 'fwdebug_flutter.dart';
+import 'fwdebug_flutter_platform_interface.dart';
 import 'src/draggable_floating_action_button.dart';
 import 'src/multi_long_press_gesture_recognizer.dart';
 
@@ -14,6 +17,7 @@ class FwdebugFlutterInspector extends StatefulWidget {
   static final panelVisible = ValueNotifier(false);
   static final List<(String, Widget)> registeredEntries = [];
   static final List<(String, dynamic Function())> registeredInfos = [];
+  static final List<(String, void Function(String url)?)> registeredUrls = [];
   static void Function(String url) openUrlCallback = (url) {
     FwdebugFlutter.navigatorObserver.navigator?.pushNamed(url);
   };
@@ -148,7 +152,13 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
                             },
                             onDoubleTap: widget.onDoubleTap ??
                                 () {
-                                  FwdebugFlutter.showTalkerScreen();
+                                  if (Platform.isIOS &&
+                                      kDebugMode &&
+                                      FwdebugFlutter.fwdebugEnabled) {
+                                    FwdebugFlutterPlatform.instance.toggle();
+                                  } else {
+                                    FwdebugFlutter.showTalkerScreen();
+                                  }
                                 },
                             onLongPress: widget.onLongPress ??
                                 () {

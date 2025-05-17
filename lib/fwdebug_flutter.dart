@@ -157,6 +157,13 @@ class FwdebugFlutter {
     }
   }
 
+  static void registerUrl(String url, [void Function(String url)? callback]) {
+    if (!isEnabled) return;
+    FwdebugFlutterInspector.registeredUrls
+        .removeWhere((element) => element.$1 == url);
+    FwdebugFlutterInspector.registeredUrls.add((url, callback));
+  }
+
   static openUrl(void Function(String url) callback) {
     if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
       FwdebugFlutterPlatform.instance.openUrl(callback);
