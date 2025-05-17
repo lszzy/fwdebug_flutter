@@ -211,11 +211,12 @@ class _DebugUrlScreenState extends State<DebugUrlScreen> {
     });
   }
 
-  void _onItemClick(String url) {
+  void _onItemClick(String url) async {
     final index = FwdebugFlutterInspector.registeredUrls
         .indexWhere((element) => element.$1 == url);
     final callback =
         index >= 0 ? FwdebugFlutterInspector.registeredUrls[index].$2 : null;
+    await Navigator.maybePop(context);
     if (callback != null) {
       callback.call(url);
     } else {
