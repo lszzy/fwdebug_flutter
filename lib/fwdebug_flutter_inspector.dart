@@ -68,6 +68,7 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
       builder: (valueContext, valueVisible, valueChild) {
         return LayoutBuilder(builder: (layoutContext, constraints) {
           final viewPadding = MediaQuery.paddingOf(context);
+          final panelSize = 130.0;
           return Stack(
             children: [
               ValueListenableBuilder(
@@ -129,17 +130,18 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
               if (valueVisible)
                 DraggableFloatingActionButton(
                   scaleFactor: valueVisible ? 1 : 0,
-                  topPadding: viewPadding.top,
-                  bottomPadding: viewPadding.bottom,
-                  width: constraints.maxWidth,
-                  height: constraints.maxHeight - viewPadding.bottom,
+                  minOffset: const Offset(-40, 0),
+                  maxOffset: Offset(
+                    constraints.maxWidth - panelSize + 40,
+                    constraints.maxHeight - panelSize,
+                  ),
                   initialOffset: Offset(
-                    constraints.maxWidth - 140,
-                    constraints.maxHeight - viewPadding.bottom - 140,
+                    constraints.maxWidth - panelSize - 10,
+                    constraints.maxHeight - viewPadding.bottom - panelSize - 10,
                   ),
                   child: SizedBox(
-                    height: 130,
-                    width: 130,
+                    height: panelSize,
+                    width: panelSize,
                     child: Stack(
                       children: [
                         Center(
@@ -184,7 +186,7 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
                             }
 
                             return _buildPanel(
-                              130,
+                              panelSize,
                               FwdebugFlutterInspector.registeredEntries
                                   .map((e) => e.$2)
                                   .toList(),
@@ -239,8 +241,8 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
         boxShadow: [
           BoxShadow(
             spreadRadius: 0,
-            blurRadius: 5,
-            color: Colors.black.withOpacity(0.3),
+            blurRadius: 4,
+            color: Colors.black.withOpacity(0.2),
           )
         ],
       ),
