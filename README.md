@@ -3,7 +3,7 @@
 Flutter debugging libraray, wrapper for [talker_flutter](https://pub.dev/packages/talker_flutter), [inspector](https://pub.dev/packages/inspector), [FWDebug](https://github.com/lszzy/FWDebug) and so on, to facilitate development and testing.
 
 ## Screenshot
-<img src="fwdebug_flutter.gif" width="300" />
+<img src="fwdebug_flutter.gif" width="375" />
 
 ## Getting Started
 By default, fwdebug_flutter is available in all modes. If you want to enable it only in debug mode, you can set it at startup as follows:
