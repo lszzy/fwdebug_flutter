@@ -3,7 +3,7 @@
 Flutter debugging libraray, wrapper for [talker_flutter](https://pub.dev/packages/talker_flutter), [inspector](https://pub.dev/packages/inspector), [FWDebug](https://github.com/lszzy/FWDebug) and so on, to facilitate development and testing.
 
 ## Screenshot
-<img src="fwdebug_flutter.gif" width="300" />
+<img src="fwdebug_flutter.gif" width="375" />
 
 ## Getting Started
 By default, fwdebug_flutter is available in all modes. If you want to enable it only in debug mode, you can set it at startup as follows:
@@ -42,12 +42,19 @@ Forward Dio requests to fwdebug_flutter, for example:
 ### 4. systemLog
 Record logs to fwdebug_flutter, for example:
 
-    FwdebugFlutter.systemLog('This is a system log');
+    FwdebugFlutter.debug('This is a system debug log');
+    // FwdebugFlutter.info('This is a system info log');
+    // FwdebugFlutter.warning('This is a system warning log');
+    // FwdebugFlutter.error('This is a system error log');
+    // FwdebugFlutter.systemLog('This is a system debug log');
 
 ### 5. customLog
 Record custom logs to fwdebug_flutter, for example:
 
-    FwdebugFlutter.customLog('This is a custom log');
+    FwdebugFlutter.customLog('This is a custom debug log');
+    // FwdebugFlutter.customLog('This is a custom info log', level: LogLevel.info);
+    // FwdebugFlutter.customLog('This is a custom warning log', level: LogLevel.warning);
+    // FwdebugFlutter.customLog('This is a custom error log', level: LogLevel.error);
 
 ### 6. toggle
 Toggle fwdebug_flutter to show or hide, for example:
