@@ -1,3 +1,8 @@
+## 1.1.0
+
+* Add level parameter to systemLog and customLog methods.
+* Add debug, info, warning, and error logging methods.
+
 ## 1.0.4
 
 * Optimize the Inspector drag position range.
@@ -5,7 +10,7 @@
 ## 1.0.3
 
 * Toggle iOS FWDebug when double clicking the inspector if supported.
-* Added registerUrl method to register url with optional callback.
+* Add registerUrl method to register url with optional callback.
 
 ## 1.0.2
 
@@ -18,11 +23,11 @@
 ## 1.0.0
 
 * 1.0.0 official version released.
-* Added talker_flutter debugging tool, supports dio, log, route, etc.
-* Added App information debugging tool, supports custom information.
-* Added route debugging tool, can quickly open the specified route.
-* Added Inspector debugging tool, quick debugging UI.
-* Added floating draggable button, supports custom entry.
+* Add talker_flutter debugging tool, supports dio, log, route, etc.
+* Add App information debugging tool, supports custom information.
+* Add route debugging tool, can quickly open the specified route.
+* Add Inspector debugging tool, quick debugging UI.
+* Add floating draggable button, supports custom entry.
 * Supports Release mode, supports custom gestures.
 * Only Debug mode enables iOS FWDebug plugin.
 
@@ -32,5 +37,5 @@
 
 ## 0.0.1
 
-* [iOS] Added iOS [FWDebug](https://github.com/lszzy/FWDebug) library for Flutter.
-* [iOS] Added [Inspector](https://github.com/kekland/inspector) library for Flutter.
+* [iOS] Add iOS [FWDebug](https://github.com/lszzy/FWDebug) library for Flutter.
+* [iOS] Add [Inspector](https://github.com/kekland/inspector) library for Flutter.
