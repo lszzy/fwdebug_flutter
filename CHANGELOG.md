@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Optimize the Inspector drag position range.
+
 ## 1.0.3
 
 * Toggle iOS FWDebug when double clicking the inspector if supported.

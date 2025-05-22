@@ -1,6 +1,6 @@
 name: fwdebug_flutter
 description: "Flutter debugging library."
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/lszzy/fwdebug_flutter
 
 environment:
