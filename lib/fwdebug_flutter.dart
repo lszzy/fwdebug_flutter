@@ -12,6 +12,8 @@ import 'fwdebug_flutter_inspector.dart';
 import 'fwdebug_flutter_platform_interface.dart';
 import 'src/debug_info_screen.dart';
 
+export 'package:talker/talker.dart';
+
 class FwdebugFlutter {
   static var isEnabled = true;
   static var fwdebugEnabled = true;
@@ -106,26 +108,46 @@ class FwdebugFlutter {
     );
   }
 
-  static systemLog(String message) {
-    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
-      FwdebugFlutterPlatform.instance.systemLog(message);
-    }
-
-    if (!isEnabled) return;
-    talker.info(message);
+  static debug(String message) {
+    systemLog(message, level: LogLevel.debug);
   }
 
-  static customLog(String message) {
+  static info(String message) {
+    systemLog(message, level: LogLevel.info);
+  }
+
+  static warning(String message) {
+    systemLog(message, level: LogLevel.warning);
+  }
+
+  static error(String message) {
+    systemLog(message, level: LogLevel.error);
+  }
+
+  static systemLog(String message, {LogLevel level = LogLevel.debug}) {
     if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
-      FwdebugFlutterPlatform.instance.customLog(message);
+      FwdebugFlutterPlatform.instance
+          .systemLog('[${level.name.substring(0, 1).toUpperCase()}] $message');
     }
 
     if (!isEnabled) return;
+    talker.log(message, logLevel: level);
+  }
+
+  static customLog(String message, {LogLevel level = LogLevel.debug}) {
+    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
+      FwdebugFlutterPlatform.instance
+          .customLog('[${level.name.substring(0, 1).toUpperCase()}] $message');
+    }
+
+    if (!isEnabled) return;
+    final type = TalkerLogType.fromLogLevel(level);
     final data = TalkerLog(
       message,
       key: 'custom',
       title: 'custom',
-      logLevel: LogLevel.error,
+      logLevel: level,
+      pen: talker.settings.getPenByLogKey(type.key),
     );
     talker.logCustom(data);
   }
