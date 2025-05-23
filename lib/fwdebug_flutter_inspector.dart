@@ -68,7 +68,7 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
       builder: (valueContext, valueVisible, valueChild) {
         return LayoutBuilder(builder: (layoutContext, constraints) {
           final viewPadding = MediaQuery.paddingOf(context);
-          final panelSize = 130.0;
+          const panelSize = 130.0;
           return Stack(
             children: [
               ValueListenableBuilder(
@@ -84,34 +84,36 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
                   }
 
                   return CallbackShortcuts(
-                    bindings: {
-                      const SingleActivator(LogicalKeyboardKey.keyF, alt: true):
-                          () => FwdebugFlutter.toggle(),
-                      const SingleActivator(LogicalKeyboardKey.keyI, alt: true):
-                          () {
-                        FwdebugFlutter.togglePanel(false);
-                        FwdebugFlutter.toggleInspector();
-                      },
-                      const SingleActivator(LogicalKeyboardKey.keyT, alt: true):
-                          () {
-                        FwdebugFlutter.showTalkerScreen();
-                      },
-                      const SingleActivator(LogicalKeyboardKey.keyD, alt: true):
-                          () {
-                        FwdebugFlutter.showInfoScreen();
-                      },
-                      const SingleActivator(LogicalKeyboardKey.keyU, alt: true):
-                          () {
-                        FwdebugFlutter.showUrlScreen();
-                      },
-                    },
+                    bindings: kDebugMode
+                        ? {
+                            const SingleActivator(LogicalKeyboardKey.keyF,
+                                alt: true): () => FwdebugFlutter.toggle(),
+                            const SingleActivator(LogicalKeyboardKey.keyI,
+                                alt: true): () {
+                              FwdebugFlutter.togglePanel(false);
+                              FwdebugFlutter.toggleInspector();
+                            },
+                            const SingleActivator(LogicalKeyboardKey.keyT,
+                                alt: true): () {
+                              FwdebugFlutter.showTalkerScreen();
+                            },
+                            const SingleActivator(LogicalKeyboardKey.keyD,
+                                alt: true): () {
+                              FwdebugFlutter.showInfoScreen();
+                            },
+                            const SingleActivator(LogicalKeyboardKey.keyU,
+                                alt: true): () {
+                              FwdebugFlutter.showUrlScreen();
+                            },
+                          }
+                        : {},
                     child: RawGestureDetector(
                       gestures: {
                         MultiLongPressGestureRecognizer:
                             GestureRecognizerFactoryWithHandlers<
                                 MultiLongPressGestureRecognizer>(
                           () => MultiLongPressGestureRecognizer(
-                            pointerThreshold: 2,
+                            pointerThreshold: kDebugMode ? 2 : 3,
                           ),
                           (instance) {
                             instance.onMultiLongPress = (details) {
