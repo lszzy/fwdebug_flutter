@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Long press with 3 fingers to switch inspector in Release mode.
+
 ## 1.1.0
 
 * Add level parameter to systemLog and customLog methods.
