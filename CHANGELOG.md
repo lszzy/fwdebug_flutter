@@ -1,3 +1,7 @@
+## 1.1.2
+
+* Optimize the version declaration of talker dependency.
+
 ## 1.1.1
 
 * Long press with 3 fingers to switch inspector in Release mode.
