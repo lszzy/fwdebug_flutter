@@ -153,11 +153,16 @@ class FwdebugFlutter {
   }
 
   static bool registerEntry(String entry, Widget? icon) {
-    if (!isEnabled) return false;
+    if (!isEnabled) {
+      return false;
+    }
     if (icon == null) {
       if (!FwdebugFlutterInspector.registeredEntries
-          .any((element) => element.$1 == entry)) return false;
+          .any((element) => element.$1 == entry)) {
+        return false;
+      }
     }
+
     FwdebugFlutterInspector.registeredEntries
         .removeWhere((element) => element.$1 == entry);
     if (icon != null) {
