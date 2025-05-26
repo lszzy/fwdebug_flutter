@@ -244,7 +244,7 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
           BoxShadow(
             spreadRadius: 0,
             blurRadius: 4,
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withAlpha((255.0 * 0.2).round()),
           )
         ],
       ),
