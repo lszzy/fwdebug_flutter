@@ -5,7 +5,7 @@ PODS:
     - Flutter
   - Flutter (1.0.0)
   - FWDebug (6.0.0)
-  - fwdebug_flutter (1.0.3):
+  - fwdebug_flutter (1.1.1):
     - Flutter
     - FWDebug
   - integration_test (0.0.1):
@@ -61,8 +61,8 @@ SPEC CHECKSUMS:
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   FWDebug: 344424b84ad33789415bd704901b3581cd50f48d
-  fwdebug_flutter: 0ecd66a2c4b2998c81113cb2826c680301c008d8
-  integration_test: d5929033778cc4991a187e4e1a85396fa4f59b3a
+  fwdebug_flutter: 104a49ddd13c45218168d7640f21aaf61be0f832
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a

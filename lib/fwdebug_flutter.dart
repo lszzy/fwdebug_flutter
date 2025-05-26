@@ -103,7 +103,6 @@ class FwdebugFlutter {
         printRequestHeaders: true,
         printResponseHeaders: true,
         printResponseMessage: true,
-        printResponseTime: true,
       ),
     );
   }
