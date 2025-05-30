@@ -17,6 +17,14 @@ abstract class FwdebugFlutterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  setEnabled(bool enabled) {
+    throw UnimplementedError('setEnabled() has not been implemented.');
+  }
+
+  Future<bool> isEnabled() {
+    throw UnimplementedError('isEnabled() has not been implemented.');
+  }
+
   toggle({bool? visible}) async {
     throw UnimplementedError('toggle() has not been implemented.');
   }

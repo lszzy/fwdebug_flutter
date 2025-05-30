@@ -1,8 +1,5 @@
 import Flutter
 import UIKit
-#if DEBUG
-import FWDebug
-#endif
 
 public class FwdebugFlutterPlugin: NSObject, FlutterPlugin {
   private static var registeredEntries: [String] = []
@@ -19,53 +16,76 @@ public class FwdebugFlutterPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
+    case "isEnabled":
+      result(debugManager != nil)
     case "toggle":
-      #if DEBUG
       if let visible = call.arguments as? Bool {
-        visible ? FWDebugManager.sharedInstance().show() : FWDebugManager.sharedInstance().hide()
+        visible ? debugManager?.objcShow() : debugManager?.objcHide()
       } else {
-        FWDebugManager.sharedInstance().toggle()
+        debugManager?.objcToggle()
       }
-      #endif
       result(nil)
     case "systemLog":
-      #if DEBUG
       if let message = call.arguments as? String, !message.isEmpty {
-        FWDebugManager.sharedInstance().systemLog(message)
+        debugManager?.objcSystemLog(message)
       }
-      #endif
       result(nil)
     case "customLog":
-      #if DEBUG
       if let message = call.arguments as? String, !message.isEmpty {
-        FWDebugManager.sharedInstance().customLog(message)
+        debugManager?.objcCustomLog(message)
       }
-      #endif
       result(nil)
     case "registerEntry":
-      #if DEBUG
       if let name = call.arguments as? String, !name.isEmpty,
          !FwdebugFlutterPlugin.registeredEntries.contains(name) {
         FwdebugFlutterPlugin.registeredEntries.append(name)
         
-        FWDebugManager.sharedInstance().registerEntry(name) { viewController in
+        debugManager?.objcRegisterEntry(name) { viewController in
           viewController.dismiss(animated: true) {
             FwdebugFlutterPlugin.methodChannel?.invokeMethod("registerEntryCallback", arguments: name)
           }
         }
       }
-      #endif
       result(nil)
     case "openUrl":
-      #if DEBUG
-      FWDebugManager.sharedInstance().openUrl = { url in
+      debugManager?.objcOpenUrl = { url in
         FwdebugFlutterPlugin.methodChannel?.invokeMethod("openUrlCallback", arguments: url)
         return true
       }
-      #endif
       result(nil)
     default:
       result(FlutterMethodNotImplemented)
     }
   }
+  
+  private var debugManager: (NSObject & ObjCDebugManagerBridge)? {
+    let debugClass: AnyClass? = NSClassFromString("FWDebugManager")
+    return debugClass?.objcSharedInstance()
+  }
+}
+
+@objc protocol ObjCDebugManagerBridge {
+  @objc(sharedInstance)
+  static func objcSharedInstance() -> NSObject & ObjCDebugManagerBridge
+
+  @objc(openUrl)
+  var objcOpenUrl: ((String) -> Bool)? { get set }
+  
+  @objc(show)
+  func objcShow()
+  
+  @objc(hide)
+  func objcHide()
+  
+  @objc(toggle)
+  func objcToggle()
+  
+  @objc(systemLog:)
+  func objcSystemLog(_ message: String)
+  
+  @objc(customLog:)
+  func objcCustomLog(_ message: String)
+  
+  @objc(registerEntry:actionBlock:)
+  func objcRegisterEntry(_ entryName: String, actionBlock: @escaping (UITableViewController) -> Void)
 }

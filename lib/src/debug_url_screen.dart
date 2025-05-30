@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fwdebug_flutter/fwdebug_flutter_inspector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'fwdebug_flutter_inspector.dart';
 
 class DebugUrlScreen extends StatefulWidget {
   const DebugUrlScreen({super.key});
