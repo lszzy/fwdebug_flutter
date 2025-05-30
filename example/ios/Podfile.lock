@@ -4,8 +4,8 @@ PODS:
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
-  - FWDebug (6.0.0)
-  - fwdebug_flutter (1.1.2):
+  - FWDebug (6.0.2)
+  - fwdebug_flutter (0.0.1):
     - Flutter
     - FWDebug
   - integration_test (0.0.1):
@@ -60,14 +60,14 @@ SPEC CHECKSUMS:
   cupertino_http: 6c6bff76e2f6915cd6b22e0e6d2698309339ec46
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  FWDebug: 344424b84ad33789415bd704901b3581cd50f48d
-  fwdebug_flutter: f05a051cc1762c6a011dca51e9b3069f5c170918
-  integration_test: d5929033778cc4991a187e4e1a85396fa4f59b3a
+  FWDebug: 2afdea4e27cb80d6aefbd52079b4841f787f5cee
+  fwdebug_flutter: 54a06acdff52b11f2e47422c753cdf827ef41540
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
 
-PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+PODFILE CHECKSUM: b39eed68a3f4d5d7eb6b19d709873449b8cb41b2
 
 COCOAPODS: 1.16.2

@@ -1,22 +1,20 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fwdebug_flutter/src/debug_url_screen.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-import 'fwdebug_flutter_inspector.dart';
-import 'fwdebug_flutter_platform_interface.dart';
+import 'src/fwdebug_flutter_inspector.dart';
+import 'src/fwdebug_flutter_platform_interface.dart';
 import 'src/debug_info_screen.dart';
+import 'src/debug_url_screen.dart';
 
 export 'package:talker/talker.dart';
 
 class FwdebugFlutter {
   static var isEnabled = true;
-  static var fwdebugEnabled = true;
   static var talker = TalkerFlutter.init();
   static var navigatorObserver = TalkerRouteObserver(talker);
 
@@ -30,7 +28,7 @@ class FwdebugFlutter {
       return child;
     }
 
-    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
+    showPlatform(() {
       FwdebugFlutterPlatform.instance.openUrl((url) {
         FwdebugFlutterInspector.openUrlCallback(url);
       });
@@ -39,7 +37,7 @@ class FwdebugFlutter {
         FwdebugFlutterInspector.isVisible.value =
             !FwdebugFlutterInspector.isVisible.value;
       });
-    }
+    });
 
     registerEntry(
       'talker',
@@ -88,9 +86,9 @@ class FwdebugFlutter {
   }
 
   static intercept(Dio dio) {
-    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
+    showPlatform(() {
       dio.httpClientAdapter = NativeAdapter();
-    }
+    });
 
     if (!isEnabled) return;
     dio.interceptors.add(interceptor);
@@ -124,20 +122,20 @@ class FwdebugFlutter {
   }
 
   static systemLog(String message, {LogLevel level = LogLevel.debug}) {
-    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
+    showPlatform(() {
       FwdebugFlutterPlatform.instance
           .systemLog('[${level.name.substring(0, 1).toUpperCase()}] $message');
-    }
+    });
 
     if (!isEnabled) return;
     talker.log(message, logLevel: level);
   }
 
   static customLog(String message, {LogLevel level = LogLevel.debug}) {
-    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
+    showPlatform(() {
       FwdebugFlutterPlatform.instance
           .customLog('[${level.name.substring(0, 1).toUpperCase()}] $message');
-    }
+    });
 
     if (!isEnabled) return;
     final type = TalkerLogType.fromLogLevel(level);
@@ -191,9 +189,9 @@ class FwdebugFlutter {
   }
 
   static openUrl(void Function(String url) callback) {
-    if (Platform.isIOS && kDebugMode && fwdebugEnabled) {
+    showPlatform(() {
       FwdebugFlutterPlatform.instance.openUrl(callback);
-    }
+    });
 
     if (!isEnabled) return;
     FwdebugFlutterInspector.openUrlCallback = callback;
@@ -242,5 +240,13 @@ class FwdebugFlutter {
     if (isVisible) {
       toggle(true);
     }
+  }
+
+  static Future<bool> showPlatform(void Function() callback) async {
+    if (Platform.isIOS && (await FwdebugFlutterPlatform.instance.isEnabled())) {
+      callback.call();
+      return true;
+    }
+    return false;
   }
 }

@@ -10,6 +10,10 @@ By default, fwdebug_flutter is available in all modes. If you want to enable it 
 
     FwdebugFlutter.isEnabled = kDebugMode;
 
+In addition, in order to make iOS FWDebug only effective in debug mode, you need to add the following code between `target 'Runner' do` and `end` in `ios/Podfile`:
+
+    pod 'FWDebug', :configurations => ['Debug']
+
 ### 1. inspector
 Initialize the fwdebug_flutter inspector, for example:
 

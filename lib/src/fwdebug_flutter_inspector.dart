@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -6,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspector/inspector.dart';
 
-import 'fwdebug_flutter.dart';
+import '../fwdebug_flutter.dart';
 import 'fwdebug_flutter_platform_interface.dart';
-import 'src/draggable_floating_action_button.dart';
-import 'src/multi_long_press_gesture_recognizer.dart';
+import 'draggable_floating_action_button.dart';
+import 'multi_long_press_gesture_recognizer.dart';
 
 class FwdebugFlutterInspector extends StatefulWidget {
   static final isVisible = ValueNotifier(false);
@@ -155,14 +154,12 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
                               }
                             },
                             onDoubleTap: widget.onDoubleTap ??
-                                () {
-                                  if (Platform.isIOS &&
-                                      kDebugMode &&
-                                      FwdebugFlutter.fwdebugEnabled) {
+                                () async {
+                                  if (await FwdebugFlutter.showPlatform(() {
                                     FwdebugFlutterPlatform.instance.toggle();
-                                  } else {
-                                    FwdebugFlutter.showTalkerScreen();
-                                  }
+                                  })) return;
+
+                                  FwdebugFlutter.showTalkerScreen();
                                 },
                             onLongPress: widget.onLongPress ??
                                 () {

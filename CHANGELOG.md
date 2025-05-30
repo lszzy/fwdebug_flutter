@@ -1,3 +1,8 @@
+## 1.2.0
+
+* Support enabling FWDebug only in Debug mode, see README for details.
+* Automatically detect and enable iOS FWDebug, code optimization.
+
 ## 1.1.2
 
 * Optimize the version declaration of talker dependency.
