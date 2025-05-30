@@ -31,10 +31,8 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
   
-  # Works in all modes, such as Debug, Release, etc.
-  # pod 'FWDebug'
   # Only works in Debug mode.
-  pod 'FWDebug', :configurations => ['Debug']
+  # pod 'FWDebug', :configurations => ['Debug']
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do

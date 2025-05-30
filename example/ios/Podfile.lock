@@ -7,6 +7,7 @@ PODS:
   - FWDebug (6.0.2)
   - fwdebug_flutter (0.0.1):
     - Flutter
+    - FWDebug
   - integration_test (0.0.1):
     - Flutter
   - package_info_plus (0.4.5):
@@ -24,7 +25,6 @@ DEPENDENCIES:
   - cupertino_http (from `.symlinks/plugins/cupertino_http/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
-  - FWDebug
   - fwdebug_flutter (from `.symlinks/plugins/fwdebug_flutter/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -61,13 +61,13 @@ SPEC CHECKSUMS:
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   FWDebug: 2afdea4e27cb80d6aefbd52079b4841f787f5cee
-  fwdebug_flutter: 66f7503ea6351ac59a742764f4fa4a027688107d
+  fwdebug_flutter: 54a06acdff52b11f2e47422c753cdf827ef41540
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
 
-PODFILE CHECKSUM: c13b6595e30c95c5faf4daa7c27b61d9653d937c
+PODFILE CHECKSUM: b39eed68a3f4d5d7eb6b19d709873449b8cb41b2
 
 COCOAPODS: 1.16.2
