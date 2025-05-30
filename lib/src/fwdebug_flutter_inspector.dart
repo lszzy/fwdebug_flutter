@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:inspector/inspector.dart';
 
 import '../fwdebug_flutter.dart';
-import 'fwdebug_flutter_platform_interface.dart';
 import 'draggable_floating_action_button.dart';
 import 'multi_long_press_gesture_recognizer.dart';
 
