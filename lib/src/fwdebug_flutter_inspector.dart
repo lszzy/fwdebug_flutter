@@ -155,11 +155,11 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
                             },
                             onDoubleTap: widget.onDoubleTap ??
                                 () async {
-                                  if (await FwdebugFlutter.showPlatform(() {
+                                  if (!(await FwdebugFlutter.showPlatform(() {
                                     FwdebugFlutterPlatform.instance.toggle();
-                                  })) return;
-
-                                  FwdebugFlutter.showTalkerScreen();
+                                  }))) {
+                                    FwdebugFlutter.showTalkerScreen();
+                                  }
                                 },
                             onLongPress: widget.onLongPress ??
                                 () {
