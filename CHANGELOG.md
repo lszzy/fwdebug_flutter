@@ -1,3 +1,7 @@
+## 1.2.1
+
+* Optimize calling FwdebugFlutterPlatform method so that platform judgment is no longer required.
+
 ## 1.2.0
 
 * Support enabling FWDebug only in Debug mode, see README for details.
