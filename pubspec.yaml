@@ -1,7 +1,7 @@
 name: fwdebug_flutter
 description: "Flutter debugging libraray, wrapper for talker_flutter, inspector, FWDebug and so on, to facilitate development and testing."
 homepage: https://github.com/lszzy/fwdebug_flutter
-version: 1.2.0
+version: 1.2.1
 
 environment:
   sdk: '>=3.4.4 <4.0.0'

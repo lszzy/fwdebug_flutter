@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:inspector/inspector.dart';
 
 import '../fwdebug_flutter.dart';
-import 'fwdebug_flutter_platform_interface.dart';
 import 'draggable_floating_action_button.dart';
 import 'multi_long_press_gesture_recognizer.dart';
 
@@ -155,11 +154,11 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
                             },
                             onDoubleTap: widget.onDoubleTap ??
                                 () async {
-                                  if (await FwdebugFlutter.showPlatform(() {
+                                  if (!(await FwdebugFlutter.showPlatform(() {
                                     FwdebugFlutterPlatform.instance.toggle();
-                                  })) return;
-
-                                  FwdebugFlutter.showTalkerScreen();
+                                  }))) {
+                                    FwdebugFlutter.showTalkerScreen();
+                                  }
                                 },
                             onLongPress: widget.onLongPress ??
                                 () {

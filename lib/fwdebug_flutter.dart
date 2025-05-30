@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
@@ -12,6 +10,7 @@ import 'src/debug_info_screen.dart';
 import 'src/debug_url_screen.dart';
 
 export 'package:talker/talker.dart';
+export 'src/fwdebug_flutter_platform_interface.dart';
 
 class FwdebugFlutter {
   static var isEnabled = true;
@@ -243,7 +242,7 @@ class FwdebugFlutter {
   }
 
   static Future<bool> showPlatform(void Function() callback) async {
-    if (Platform.isIOS && (await FwdebugFlutterPlatform.instance.isEnabled())) {
+    if (await FwdebugFlutterPlatform.instance.isEnabled()) {
       callback.call();
       return true;
     }
