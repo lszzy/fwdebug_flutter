@@ -1,10 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fwdebug_flutter/fwdebug_flutter.dart';
 
 void main() {
   // FwdebugFlutter.isEnabled = kDebugMode;
-  runApp(const MyApp());
+  runApp(ProviderScope(
+    observers: [FwdebugFlutter.riverpodObserver],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
