@@ -1,3 +1,7 @@
+## 1.3.0
+
+* Add FwdebugFlutter.riverpodObserver for flutter_riverpod.
+
 ## 1.2.1
 
 * Optimize calling FwdebugFlutterPlatform method so that platform judgment is no longer required.
