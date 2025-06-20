@@ -179,6 +179,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.2"
+  flutter_riverpod:
+    dependency: "direct main"
+    description:
+      name: flutter_riverpod
+      sha256: "9532ee6db4a943a1ed8383072a2e3eeda041db5657cdf6d2acecf3c21ecbe7e1"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.6.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -200,7 +208,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.2.0"
+    version: "1.2.1"
   group_button:
     dependency: transitive
     description:
@@ -430,6 +438,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.0.2"
+  riverpod:
+    dependency: transitive
+    description:
+      name: riverpod
+      sha256: "59062512288d3056b2321804332a13ffdd1bf16df70dcc8e506e411280a72959"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.6.1"
   share_plus:
     dependency: transitive
     description:
@@ -531,6 +547,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.11.1"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:
@@ -585,6 +609,14 @@ packages:
     description:
       name: talker_logger
       sha256: "416b4d726358764c68c2de23c11bf9f146f2608ac244ec2ed9da741f89c49a6e"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.7.2"
+  talker_riverpod_logger:
+    dependency: transitive
+    description:
+      name: talker_riverpod_logger
+      sha256: "956422a31eac206850af81d92e3b95244512da1f7e3b499b40ee875d840f476e"
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.7.2"

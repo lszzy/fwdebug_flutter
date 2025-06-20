@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger_settings.dart';
 
 import 'src/fwdebug_flutter_inspector.dart';
 import 'src/fwdebug_flutter_platform_interface.dart';
@@ -15,7 +18,6 @@ export 'src/fwdebug_flutter_platform_interface.dart';
 class FwdebugFlutter {
   static var isEnabled = true;
   static var talker = TalkerFlutter.init();
-  static var navigatorObserver = TalkerRouteObserver(talker);
 
   static Widget inspector({
     required Widget child,
@@ -96,10 +98,24 @@ class FwdebugFlutter {
   static Interceptor get interceptor {
     return TalkerDioLogger(
       talker: talker,
-      settings: const TalkerDioLoggerSettings(
+      settings: TalkerDioLoggerSettings(
+        enabled: isEnabled,
         printRequestHeaders: true,
         printResponseHeaders: true,
         printResponseMessage: true,
+      ),
+    );
+  }
+
+  static NavigatorObserver get navigatorObserver {
+    return TalkerRouteObserver(talker);
+  }
+
+  static ProviderObserver get riverpodObserver {
+    return TalkerRiverpodObserver(
+      talker: talker,
+      settings: TalkerRiverpodLoggerSettings(
+        enabled: isEnabled,
       ),
     );
   }
