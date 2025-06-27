@@ -63,8 +63,9 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               FwdebugFlutter.systemLog('This is a system debug log');
               FwdebugFlutter.info('This is a system info log');
-              FwdebugFlutter.warning('This is a system warning log');
-              FwdebugFlutter.error('This is a system error log');
+              FwdebugFlutter.warning('This is a system warning log',
+                  group: 'test');
+              FwdebugFlutter.error('This is a system error log', group: 'test');
               _showToast('System Log called');
             },
             child: const Text('System Log'),
@@ -75,9 +76,9 @@ class _HomePageState extends State<HomePage> {
               FwdebugFlutter.customLog('This is a custom info log',
                   level: LogLevel.info);
               FwdebugFlutter.customLog('This is a custom warning log',
-                  level: LogLevel.warning);
+                  level: LogLevel.warning, group: 'test');
               FwdebugFlutter.customLog('This is a custom error log',
-                  level: LogLevel.error);
+                  level: LogLevel.error, group: 'test');
               _showToast('Custom Log called');
             },
             child: const Text('Custom Log'),

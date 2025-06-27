@@ -18,6 +18,7 @@ export 'src/fwdebug_flutter_platform_interface.dart';
 class FwdebugFlutter {
   static var isEnabled = true;
   static var talker = TalkerFlutter.init();
+  static var navigatorObserver = TalkerRouteObserver(talker);
 
   static Widget inspector({
     required Widget child,
@@ -107,10 +108,6 @@ class FwdebugFlutter {
     );
   }
 
-  static NavigatorObserver get navigatorObserver {
-    return TalkerRouteObserver(talker);
-  }
-
   static ProviderObserver get riverpodObserver {
     return TalkerRiverpodObserver(
       talker: talker,
@@ -120,42 +117,55 @@ class FwdebugFlutter {
     );
   }
 
-  static debug(String message) {
-    systemLog(message, level: LogLevel.debug);
+  static debug(String message, {String group = ''}) {
+    systemLog(message, level: LogLevel.debug, group: group);
   }
 
-  static info(String message) {
-    systemLog(message, level: LogLevel.info);
+  static info(String message, {String group = ''}) {
+    systemLog(message, level: LogLevel.info, group: group);
   }
 
-  static warning(String message) {
-    systemLog(message, level: LogLevel.warning);
+  static warning(String message, {String group = ''}) {
+    systemLog(message, level: LogLevel.warning, group: group);
   }
 
-  static error(String message) {
-    systemLog(message, level: LogLevel.error);
+  static error(String message, {String group = ''}) {
+    systemLog(message, level: LogLevel.error, group: group);
   }
 
-  static systemLog(String message, {LogLevel level = LogLevel.debug}) {
+  static systemLog(
+    String message, {
+    LogLevel level = LogLevel.debug,
+    String group = '',
+  }) {
     showPlatform(() {
-      FwdebugFlutterPlatform.instance
-          .systemLog('[${level.name.substring(0, 1).toUpperCase()}] $message');
+      FwdebugFlutterPlatform.instance.systemLog(
+        '[${level.name.substring(0, 1).toUpperCase()}] ${group.isNotEmpty ? ('[' + group + '] ') : ''}$message',
+      );
     });
 
     if (!isEnabled) return;
-    talker.log(message, logLevel: level);
+    talker.log(
+      group.isNotEmpty ? '[${group}] $message' : message,
+      logLevel: level,
+    );
   }
 
-  static customLog(String message, {LogLevel level = LogLevel.debug}) {
+  static customLog(
+    String message, {
+    LogLevel level = LogLevel.debug,
+    String group = '',
+  }) {
     showPlatform(() {
-      FwdebugFlutterPlatform.instance
-          .customLog('[${level.name.substring(0, 1).toUpperCase()}] $message');
+      FwdebugFlutterPlatform.instance.customLog(
+        '[${level.name.substring(0, 1).toUpperCase()}] ${group.isNotEmpty ? ('[' + group + '] ') : ''}$message',
+      );
     });
 
     if (!isEnabled) return;
     final type = TalkerLogType.fromLogLevel(level);
     final data = TalkerLog(
-      message,
+      group.isNotEmpty ? '[${group}] $message' : message,
       key: 'custom',
       title: 'custom',
       logLevel: level,
