@@ -1,3 +1,8 @@
+## 1.4.0
+
+* Add group parameter to systemLog and customLog methods.
+* Fixed the issue that the debug page cannot open.
+
 ## 1.3.0
 
 * Add FwdebugFlutter.riverpodObserver for flutter_riverpod.

@@ -57,16 +57,16 @@ Record logs to fwdebug_flutter, for example:
     FwdebugFlutter.debug('This is a system debug log');
     // FwdebugFlutter.info('This is a system info log');
     // FwdebugFlutter.warning('This is a system warning log');
-    // FwdebugFlutter.error('This is a system error log');
-    // FwdebugFlutter.systemLog('This is a system debug log');
+    // FwdebugFlutter.error('This is a system error log', group: 'test');
+    // FwdebugFlutter.systemLog('This is a system debug log', group: 'test');
 
 ### 6. customLog
 Record custom logs to fwdebug_flutter, for example:
 
     FwdebugFlutter.customLog('This is a custom debug log');
     // FwdebugFlutter.customLog('This is a custom info log', level: LogLevel.info);
-    // FwdebugFlutter.customLog('This is a custom warning log', level: LogLevel.warning);
-    // FwdebugFlutter.customLog('This is a custom error log', level: LogLevel.error);
+    // FwdebugFlutter.customLog('This is a custom warning log', level: LogLevel.warning, group: 'test');
+    // FwdebugFlutter.customLog('This is a custom error log', level: LogLevel.error, group: 'test');
 
 ### 7. toggle
 Toggle fwdebug_flutter to show or hide, for example:
