@@ -1,3 +1,7 @@
+## 1.4.1
+
+* Remove conflicting Alt shortcut keys from Inspector.
+
 ## 1.4.0
 
 * Add group parameter to systemLog and customLog methods.
