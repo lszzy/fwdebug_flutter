@@ -76,6 +76,11 @@ class _FwdebugFlutterInspectorState extends State<FwdebugFlutterInspector>
                     isEnabled: true,
                     isPanelVisible: inspectorVisible,
                     child: inspectorChild!,
+                    widgetInspectorShortcuts: const [
+                      LogicalKeyboardKey.meta,
+                      LogicalKeyboardKey.metaLeft,
+                      LogicalKeyboardKey.metaRight,
+                    ],
                   );
                   if (widget.detector != null) {
                     return widget.detector!(inspector);
