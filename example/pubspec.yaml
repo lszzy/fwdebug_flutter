@@ -19,6 +19,7 @@ dependencies:
   
   dio: ^5.4.0
   flutter_riverpod: ^2.0.0
+  flutter_bloc: ^9.0.0
 
   fwdebug_flutter:
     # When depending on this package from a real application you should use:
