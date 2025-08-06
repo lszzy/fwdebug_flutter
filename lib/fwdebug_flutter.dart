@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
+import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
@@ -96,7 +96,7 @@ class FwdebugFlutter {
     dio.interceptors.add(interceptor);
   }
 
-  static Interceptor get interceptor {
+  static TalkerDioLogger get interceptor {
     return TalkerDioLogger(
       talker: talker,
       settings: TalkerDioLoggerSettings(
@@ -108,10 +108,19 @@ class FwdebugFlutter {
     );
   }
 
-  static ProviderObserver get riverpodObserver {
+  static TalkerRiverpodObserver get riverpodObserver {
     return TalkerRiverpodObserver(
       talker: talker,
       settings: TalkerRiverpodLoggerSettings(
+        enabled: isEnabled,
+      ),
+    );
+  }
+
+  static TalkerBlocObserver get blocObserver {
+    return TalkerBlocObserver(
+      talker: talker,
+      settings: TalkerBlocLoggerSettings(
         enabled: isEnabled,
       ),
     );

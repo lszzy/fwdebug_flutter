@@ -25,6 +25,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.11.0"
+  bloc:
+    dependency: transitive
+    description:
+      name: bloc
+      sha256: "52c10575f4445c61dd9e0cafcc6356fdd827c4c64dd7945ef3c4105f6b6ac189"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "9.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -166,6 +174,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_bloc:
+    dependency: "direct main"
+    description:
+      name: flutter_bloc
+      sha256: cf51747952201a455a1c840f8171d273be009b932c75093020f9af64f2123e38
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "9.1.1"
   flutter_driver:
     dependency: transitive
     description: flutter
@@ -208,7 +224,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.4.0"
+    version: "1.4.1"
   group_button:
     dependency: transitive
     description:
@@ -334,6 +350,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.4.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.0"
   package_config:
     dependency: transitive
     description:
@@ -438,6 +462,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.0.2"
+  provider:
+    dependency: transitive
+    description:
+      name: provider
+      sha256: "4abbd070a04e9ddc287673bf5a030c7ca8b685ff70218720abab8b092f53dd84"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "6.1.5"
   riverpod:
     dependency: transitive
     description:
@@ -584,6 +616,14 @@ packages:
     description:
       name: talker
       sha256: cbea2c5a10a3d9225e58b5fef4092d6ec00f1fcda43f92a33dfbab1ea7ffca79
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.7.2"
+  talker_bloc_logger:
+    dependency: transitive
+    description:
+      name: talker_bloc_logger
+      sha256: e4ad2c2c9878e745b9a5f930c7006f04b808f2f1d07005de9e14836b99faa3ed
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.7.2"

@@ -51,7 +51,12 @@ Register the fwdebug_flutter riverpodObserver, for example:
       child: const MyApp(),
     ));
 
-### 5. systemLog
+### 5. blocObserver
+Register the fwdebug_flutter blocObserver, for example:
+
+    Bloc.observer = FwdebugFlutter.blocObserver;
+
+### 6. systemLog
 Record logs to fwdebug_flutter, for example:
 
     FwdebugFlutter.debug('This is a system debug log');
@@ -60,7 +65,7 @@ Record logs to fwdebug_flutter, for example:
     // FwdebugFlutter.error('This is a system error log', group: 'test');
     // FwdebugFlutter.systemLog('This is a system debug log', group: 'test');
 
-### 6. customLog
+### 7. customLog
 Record custom logs to fwdebug_flutter, for example:
 
     FwdebugFlutter.customLog('This is a custom debug log');
@@ -68,12 +73,12 @@ Record custom logs to fwdebug_flutter, for example:
     // FwdebugFlutter.customLog('This is a custom warning log', level: LogLevel.warning, group: 'test');
     // FwdebugFlutter.customLog('This is a custom error log', level: LogLevel.error, group: 'test');
 
-### 7. toggle
+### 8. toggle
 Toggle fwdebug_flutter to show or hide, for example:
 
     FwdebugFlutter.toggle();
 
-### 8. registerEntry
+### 9. registerEntry
 Register custom entry to fwdebug_flutter, for example:
 
     FwdebugFlutter.registerEntry(
@@ -84,18 +89,18 @@ Register custom entry to fwdebug_flutter, for example:
         ),
     );
 
-### 9. registerInfo
+### 10. registerInfo
 Register custom info to fwdebug_flutter, for example:
 
     FwdebugFlutter.registerInfo('custom', () { ... });
 
-### 10. registerUrl
+### 11. registerUrl
 Register custom url to fwdebug_flutter, for example:
 
     FwdebugFlutter.registerUrl('/custom');
     // FwdebugFlutter.registerUrl('/custom', (url) { ... });
 
-### 11. openUrl
+### 12. openUrl
 Register opening URL of fwdebug_flutter, for example:
 
     FwdebugFlutter.openUrl((url) { ... });

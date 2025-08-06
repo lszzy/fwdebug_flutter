@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fwdebug_flutter/fwdebug_flutter.dart';
 
 void main() {
   // FwdebugFlutter.isEnabled = kDebugMode;
+  Bloc.observer = FwdebugFlutter.blocObserver;
   runApp(ProviderScope(
     observers: [FwdebugFlutter.riverpodObserver],
     child: const MyApp(),
