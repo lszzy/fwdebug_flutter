@@ -1,3 +1,7 @@
+## 1.5.0
+
+* Add FwdebugFlutter.blocObserver for flutter_bloc.
+
 ## 1.4.1
 
 * Remove conflicting Alt shortcut keys from Inspector.
